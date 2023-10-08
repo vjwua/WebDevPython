@@ -9,18 +9,20 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sock.bind((HOST, PORT))
 sock.listen()
 conn, addr = sock.accept()
-print(f"Connected by {addr}")
+with conn:
+    print(f"Connected by {addr}")
+    while True:
+        data = conn.recv(1024)
+        if not data:
+            break
 
-while True:
-    data = conn.recv(1024)
-
-    print("Timeout is on...")
-    time.sleep(5)
-    print("Timeout is off...")
-    
-    conn.sendall(data)
-    print(f"\t[Message] - {data.decode()}")
-    print(f"\t[Time] - {datetime.now()}")
+        print("Timeout is on...")
+        time.sleep(5)
+        print("Timeout is off...")
+        
+        conn.sendall(data)
+        print(f"\t[Message] - {data.decode()}")
+        print(f"\t[Time] - {datetime.now()}")
 
 conn.close()
 sock.close()

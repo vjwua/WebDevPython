@@ -6,9 +6,10 @@ PORT = 25050
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sock.connect((HOST, PORT))
 
-data = input("Enter something to send: ")
+while input != "":
+    data = input("Enter something to send: ")
 
-sock.sendall(data.encode())
-data = sock.recv(1024)
+    sock.sendall(data.encode())
+    data = sock.recv(1024)
 
-print(f"Received {data!r}")
+    print(f"Received {data!r}")

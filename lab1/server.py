@@ -1,5 +1,6 @@
 import socket
 from datetime import datetime
+import time
 
 HOST = "127.0.0.1"
 PORT = 25050
@@ -10,7 +11,16 @@ sock.listen()
 conn, addr = sock.accept()
 print(f"Connected by {addr}")
 
-data = conn.recv(1024)
-conn.sendall(data)
-print(f"\t[Message] - {data.decode()}")
-print(f"\t[Time] - {datetime.now()}")
+while True:
+    data = conn.recv(1024)
+
+    print("Timeout is on...")
+    time.sleep(5)
+    print("Timeout is off...")
+    
+    conn.sendall(data)
+    print(f"\t[Message] - {data.decode()}")
+    print(f"\t[Time] - {datetime.now()}")
+
+conn.close()
+sock.close()

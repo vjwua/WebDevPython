@@ -14,7 +14,7 @@ def receive():
         try:
             message = client.recv(1024).decode('ascii')
             if message == 'NICK':
-                pass
+                client.send(nickname.encode('ascii'))
             else:
                 print(message)
         except:

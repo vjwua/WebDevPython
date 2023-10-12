@@ -54,7 +54,7 @@ try:
 
     cookie["username"] = username
     cookie["password"] = password
-    cookie["counter"] = str(counter)
+    cookie["counter"] = counter
 
     print(f"Set-cookie: {cookie['username']};")
     print(f"Set-cookie: {cookie['password']};")

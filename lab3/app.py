@@ -4,6 +4,8 @@ from _datetime import datetime
 
 app = Flask(__name__)
 
+my_skills = ["C++", "HTML & CSS", "MySQL", "JavaScript", "Java", "Python", "OpenGL", "Paint.net"]
+
 def get_user_info():
     user_os = os.name
     user_agent = request.headers.get('User-Agent')
@@ -36,6 +38,19 @@ def hobbies():
     user_os, user_agent, current_time = get_user_info()
     return render_template('hobbies.html', user_os=user_os, user_agent=user_agent, current_time=current_time)
 
+@app.route('/skills/')
+@app.route('/skills/<int:id>')
+def skills(id=None):
+    user_os, user_agent, current_time = get_user_info()
+    if id is not None:
+        if 0 <= id < len(my_skills):
+            skill = my_skills[id]
+            return render_template('skills.html', skill=skill, user_os=user_os, user_agent=user_agent, current_time=current_time)
+        else:
+            return render_template('skills.html', user_os=user_os, user_agent=user_agent, current_time=current_time)
+    else:
+        return render_template('skills.html', skills=my_skills, total_skills=len(my_skills), user_os=user_os, user_agent=user_agent, current_time=current_time)
+    
 @app.route("/main")
 def main():
     return redirect(url_for("base"))

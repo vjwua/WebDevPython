@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, json
 import os
 from datetime import datetime
 from app import app
@@ -36,6 +36,27 @@ def edu():
 def hobbies():
     user_os, user_agent, current_time = get_user_info()
     return render_template('hobbies.html', user_os=user_os, user_agent=user_agent, current_time=current_time)
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    user_os, user_agent, current_time = get_user_info()
+    filename = os.path.join(app.static_folder, 'data', 'auth.json')
+
+    with open(filename) as test_file:
+        data = json.load(test_file)
+
+    name = data['name']
+    password = data['password']
+
+    if name == "admin" and password == "PurpleEye123":
+        return redirect(url_for('info', user=name))
+    
+    return render_template('login.html', user_os=user_os, user_agent=user_agent, current_time=current_time)
+
+@app.route('/info')
+def info(name = None):
+    user_os, user_agent, current_time = get_user_info()
+    return render_template('info.html', user=name, user_os=user_os, user_agent=user_agent, current_time=current_time)
 
 @app.route('/skills/')
 @app.route('/skills/<int:id>')

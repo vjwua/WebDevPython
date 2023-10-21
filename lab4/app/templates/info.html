@@ -3,8 +3,12 @@
 {% block body %}
 <header class="masthead bg-primary text-white text-center">
     <div class="container d-flex align-items-center flex-column">
-        <h1>Ласкаво просимо, {{ user }}!</h1>
+        <h1>Ласкаво просимо, {{ session['name'] }}!</h1>
         <h3>Надіюсь, вам тут буде затишно</h3>
+
+        <form id="logoutButton" action={{ url_for('logout') }}>
+            <input class="btn btn-primary btn-xl" type="submit" value="Вийти" />
+        </form>
     </div>
 </header>
 {% endblock %}

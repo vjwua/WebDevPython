@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, json
+from flask import Flask, render_template, request, redirect, url_for, json, session
 import os
 from datetime import datetime
 from app import app
@@ -40,23 +40,35 @@ def hobbies():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     user_os, user_agent, current_time = get_user_info()
-    filename = os.path.join(app.static_folder, 'data', 'auth.json')
+    if request.method == "POST":
+        filename = os.path.join(app.static_folder, 'data', 'auth.json')
+        with open(filename) as test_file:
+            data = json.load(test_file)
 
-    with open(filename) as test_file:
-        data = json.load(test_file)
+        json_name = data['name']
+        json_password = data['password']
 
-    name = data['name']
-    password = data['password']
+        form_name = request.form.get("name")
+        form_password = request.form.get("password")
 
-    if name == "admin" and password == "PurpleEye123":
-        return redirect(url_for('info', user=name))
+        if json_name == form_name and json_password == form_password:
+            session['name'] = form_name
+            session['password'] = form_password
+            return redirect(url_for('info', user=session['name']))
     
     return render_template('login.html', user_os=user_os, user_agent=user_agent, current_time=current_time)
 
 @app.route('/info')
-def info(name = None):
+def info():
     user_os, user_agent, current_time = get_user_info()
-    return render_template('info.html', user=name, user_os=user_os, user_agent=user_agent, current_time=current_time)
+    return render_template('info.html', user_os=user_os, user_agent=user_agent, current_time=current_time)
+
+@app.route('/logout')
+def logout():
+    user_os, user_agent, current_time = get_user_info()
+    session.pop('name', default=None)
+    session.pop('password', default=None)    
+    return redirect(url_for("home"))
 
 @app.route('/skills/')
 @app.route('/skills/<int:id>')
@@ -73,4 +85,4 @@ def skills(id=None):
     
 @app.route("/main")
 def main():
-    return redirect(url_for("base"))
+    return redirect(url_for("home"))

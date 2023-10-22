@@ -74,7 +74,24 @@
                     <label for="name">Ключ</label>
                 </div>
                 <!-- Submit Button-->
-                <button class="btn btn-primary btn-xl" id="submitButton" type="submit">Знищити</button>
+                <button class="btn btn-secondary btn-xl" id="submitButton" type="submit">Знищити</button>
+            </form>
+        </div>
+    </div>
+</section>
+<section class="page-section" id="delete_cookie">
+    <!-- Section Heading-->
+    <h2 class="page-section-heading text-center text-primary mb-0">Видалити всі кукі</h2>
+    <!-- Icon Divider-->
+    <div class="divider-custom">
+        <div class="divider-custom-line"></div>
+        <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+        <div class="divider-custom-line"></div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-7">
+            <form id="contactForm" action="/remove_all_cookies" method="GET">
+                <button class="btn btn-danger btn-xl" id="submitButton" type="submit">Знищити</button>
             </form>
         </div>
     </div>
@@ -106,6 +123,31 @@
                     {% endfor %}
                 </tbody>
             </table>
+        </div>
+    </div>
+</section>
+<section class="page-section" id="delete_cookie">
+    <!-- Section Heading-->
+    <h2 class="page-section-heading text-center text-primary mb-0">Змінити пароль</h2>
+    <!-- Icon Divider-->
+    <div class="divider-custom">
+        <div class="divider-custom-line"></div>
+        <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+        <div class="divider-custom-line"></div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-xl-7">
+            <form id="contactForm" action="/change_password" method="POST">
+                <div class="form-floating mb-3">
+                    <input class="form-control" 
+                            id="new_password" 
+                            type="password"
+                            name="new_password"
+                    <label for="name">Новий пароль</label>
+                </div>
+                <!-- Submit Button-->
+                <button class="btn btn-primary btn-xl" id="submitButton" type="submit">Змінити</button>
+            </form>
         </div>
     </div>
 </section>

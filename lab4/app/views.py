@@ -140,6 +140,13 @@ def remove_all_cookies():
 
     return response
 
+@app.route('/change_password', methods=['POST'])
+def change_password():
+    new_password = request.form.get('new_password')
+    session['password'] = new_password
+    user_os, user_agent, current_time = get_user_info()
+    return render_template('password_changed.html', user_os=user_os, user_agent=user_agent, current_time=current_time)
+
 @app.route("/main")
 def main():
     return redirect(url_for("home"))

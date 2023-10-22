@@ -1,10 +1,14 @@
 {% extends 'base.html' %}
 
+{% set username = session['name'] %}
+{% set userId = session['userId'] %}
+
 {% block body %}
 <header class="masthead bg-primary text-white text-center">
     <div class="container d-flex align-items-center flex-column">
-        <h1>Ласкаво просимо, {{ session['name'] }}!</h1>
+        <h1>Ласкаво просимо, {{ username }}!</h1>
         <h3>Надіюсь, вам тут буде затишно</h3>
+        <h3>(ваш унікальний id - {{ userId }})</h3>
 
         <form id="logoutButton" action={{ url_for('logout') }}>
             <input class="btn btn-primary btn-xl" type="submit" value="Вийти" />

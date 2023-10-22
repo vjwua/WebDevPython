@@ -3,8 +3,9 @@
     "Навчання": url_for("edu"), 
     "Хобі": url_for("hobbies"), 
     "Навички": url_for("skills"),
-    "Увійти": url_for("login")
 } %}
+
+{% set userId = session['userId'] %}
 
 <!DOCTYPE html>
 <html>
@@ -32,6 +33,12 @@
                     {%for name, url in menu.items() %}
                     <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href={{url}}> {{ name | upper}} </a></li>
                     {% endfor %}
+
+                    {% if userId %}
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href={{ url_for('info') }}> Профіль </a></li>
+                    {% else %} <!--userId != None-->
+                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href={{ url_for('login') }}> Увійти </a></li>
+                    {% endif %}
                 </ul>
             </div>
         </div>

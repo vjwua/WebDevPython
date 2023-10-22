@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, json, session
+from flask import Flask, render_template, request, redirect, url_for, json, make_response, session
 import os
 from datetime import datetime
 from app import app
@@ -68,8 +68,9 @@ def login():
 
 @app.route('/info', methods=['GET'])
 def info():
+    cookies = request.cookies
     user_os, user_agent, current_time = get_user_info()
-    return render_template('info.html', user_os=user_os, user_agent=user_agent, current_time=current_time)
+    return render_template('info.html', user_os=user_os, user_agent=user_agent, current_time=current_time, cookies=cookies)
 
 @app.route('/logout')
 def logout():
@@ -90,7 +91,55 @@ def skills(id=None):
             return render_template('skills.html', user_os=user_os, user_agent=user_agent, current_time=current_time)
     else:
         return render_template('skills.html', skills=my_skills, total_skills=len(my_skills), user_os=user_os, user_agent=user_agent, current_time=current_time)
-    
+
+def set_cookie(key, value, max_age):
+    user_os, user_agent, current_time = get_user_info()
+    response = make_response(render_template('cookie_added.html', user_os=user_os, user_agent=user_agent, current_time=current_time))
+    response.set_cookie(key, value, max_age=max_age)
+    return response
+
+def delete_cookie(key):
+    user_os, user_agent, current_time = get_user_info()
+    response = make_response(render_template('cookie_deleted.html', user_os=user_os, user_agent=user_agent, current_time=current_time))
+    response.delete_cookie(key)
+    return response
+
+@app.route('/add_cookie', methods=['POST'])
+def add_cookie():
+    key = request.form.get('key')
+    value = request.form.get('value')
+    max_age = int(request.form.get('max_age'))
+
+    return set_cookie(key, value, max_age)
+
+@app.route('/remove_cookie/', methods=['GET'])
+@app.route('/remove_cookie/<key>', methods=['GET'])
+def remove_cookie():
+
+    key = request.args.get('key')
+
+    if key:
+        user_os, user_agent, current_time = get_user_info()
+        response = make_response(render_template('cookie_deleted.html', user_os=user_os, user_agent=user_agent, current_time=current_time))
+        response.delete_cookie(key)
+        return response
+    else:
+        user_os, user_agent, current_time = get_user_info()
+        response = make_response(render_template('cookie_error.html', user_os=user_os, user_agent=user_agent, current_time=current_time))
+        return response
+
+@app.route('/remove_all_cookies', methods=['GET'])
+def remove_all_cookies():
+    user_os, user_agent, current_time = get_user_info()
+    response = make_response(render_template('all_cookies_deleted.html', user_os=user_os, user_agent=user_agent, current_time=current_time))
+    cookies = request.cookies
+
+    for key in cookies.keys():
+        if key != 'session':
+            response.delete_cookie(key)
+
+    return response
+
 @app.route("/main")
 def main():
     return redirect(url_for("home"))

@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, json, make_response, session
+from flask import Flask, flash, render_template, request, redirect, url_for, json, make_response, session
 from datetime import datetime
 from app import app
 from app.forms import LoginForm
@@ -42,33 +42,31 @@ def hobbies():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     user_os, user_agent, current_time = get_user_info()
-
     form = LoginForm()
 
-    login_failure = False
+    filename = os.path.join(app.static_folder, 'data', 'auth.json')
+    with open(filename) as test_file:
+        data = json.load(test_file)
 
-    if request.method == "POST":
-        filename = os.path.join(app.static_folder, 'data', 'auth.json')
-        with open(filename) as test_file:
-            data = json.load(test_file)
+    json_name = data['name']
+    json_password = data['password']
 
-        json_name = data['name']
-        json_password = data['password']
-
-        form_name = request.form.get("name")
-        form_password = request.form.get("password")
+    if form.validate_on_submit():
+        form_name = form.username.data
+        form_password = form.password.data
 
         if json_name == form_name and json_password == form_password:
             user_id = random.randint(1, 10000)
             session['userId'] = user_id
             session['name'] = form_name
             session['password'] = form_password
+            flash("Вхід виконано", category=("success"))
             return redirect(url_for('info', user=session['name']))
         else:
-            login_failure = True
-            return render_template('login.html', form=form, user_os=user_os, user_agent=user_agent, current_time=current_time, login_failed=login_failure)
+            flash("Вхід не виконано", category=("warning"))
+            return render_template('login.html', form=form, user_os=user_os, user_agent=user_agent, current_time=current_time)
     
-    return render_template('login.html', form=form, user_os=user_os, user_agent=user_agent, current_time=current_time, login_failed=login_failure)
+    return render_template('login.html', form=form, user_os=user_os, user_agent=user_agent, current_time=current_time)
 
 @app.route('/info', methods=['GET'])
 def info():

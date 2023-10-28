@@ -10968,7 +10968,8 @@ html {
 }
 
 .masthead {
-  padding-top: calc(6rem + 74px);
+  /* padding-top: calc(6rem + 74px); */
+  padding-top: calc(0.5rem + 74px);
   padding-bottom: 6rem;
 }
 .masthead .masthead-heading {
@@ -10984,7 +10985,8 @@ html {
 
 @media (min-width: 992px) {
   .masthead {
-    padding-top: calc(6rem + 104px);
+    /* padding-top: calc(6rem + 104px); */
+    padding-top: calc(1rem + 104px);
     padding-bottom: 6rem;
   }
   .masthead .masthead-heading {

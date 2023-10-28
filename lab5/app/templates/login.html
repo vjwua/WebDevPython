@@ -27,17 +27,14 @@
                     {{form.username(class_='form-control')}} {{form.username.label}} 
                     </div>
                     <div class="form-floating mb-3">
-                    {{form.password(class_='form-control')}}  {{form.password.label}} 
+                    {{form.password(class_='form-control')}}  {{form.password.label}}
                     </div>
-                    <div class="form-floating mb-3">
-                    {{form.remember(class_='form-control')}} {{form.remember.label}} 
+                    <div class="form-check mb-3">
+                    {{form.remember}} {{form.remember.label}} 
                     </div>
                     {{form.submit(class_='btn btn-primary btn-xl')}}
                 </form>
             </div>
-            {% if login_failed %}
-            <p class="text-center text-danger mb-3"><b>Вхід невдалий. Перевірьте, чи дійсне ім'я чи пароль</b></p>
-            {% endif %} 
         </div>
     </div>
 </section>

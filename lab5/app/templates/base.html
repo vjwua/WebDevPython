@@ -15,6 +15,18 @@
 <body>
     {% include 'nav.html' %}
 
+    <div class="container align-items-center flex-column">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="list-group">
+            {% for category, message in messages %}
+                <li class="list-group-item list-group-item-{{category}}">{{message}}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    </div>
+
     {% block body %}
     {% endblock %}
 

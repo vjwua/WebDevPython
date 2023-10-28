@@ -22,15 +22,18 @@
         <div class="row justify-content-center">
             <div class="col-lg-8 col-xl-7">
                 <form id="contactForm" action={{url_for("login")}} method="POST">
+                    {% from "_render_field.html" import render_field %}
                     {{form.hidden_tag()}}
                     <div class="form-floating mb-3">
-                    {{form.username(class_='form-control')}} {{form.username.label}} 
+                        {{ render_field(form.username)}}
                     </div>
                     <div class="form-floating mb-3">
-                    {{form.password(class_='form-control')}}  {{form.password.label}}
+                        {{ render_field(form.password)}}
                     </div>
-                    <div class="form-check mb-3">
-                    {{form.remember}} {{form.remember.label}} 
+                    <div class="form-floating mb-3">
+                        <div class="form-check mb-3">
+                            {{form.remember}} {{form.remember.label}} 
+                        </div>
                     </div>
                     {{form.submit(class_='btn btn-primary btn-xl')}}
                 </form>

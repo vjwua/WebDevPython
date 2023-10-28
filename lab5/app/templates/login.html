@@ -4,12 +4,6 @@
 {% block body %}
 <section class="page-section" id="contact">
     <div class="container">
-        <!-- Icon Divider-->
-        <div class="divider-custom">
-            <div class="divider-custom-line"></div>
-            <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
-            <div class="divider-custom-line"></div>
-        </div>        
         <!-- Contact Section Heading-->
         <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Увійти</h2>
         <!-- Icon Divider-->
@@ -23,7 +17,7 @@
             <div class="col-lg-8 col-xl-7">
                 <form id="contactForm" action={{url_for("login")}} method="POST">
                     {% from "_render_field.html" import render_field %}
-                    {{form.hidden_tag()}}
+                    {{form.csrf_token}}
                     <div class="form-floating mb-3">
                         {{ render_field(form.username)}}
                     </div>

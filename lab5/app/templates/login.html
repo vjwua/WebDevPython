@@ -21,25 +21,18 @@
         <!-- Contact Section Form-->
         <div class="row justify-content-center">
             <div class="col-lg-8 col-xl-7">
-                <form id="contactForm" action="/login" method="POST">
+                <form id="contactForm" action={{url_for("login")}} method="POST">
+                    {{form.hidden_tag()}}
                     <div class="form-floating mb-3">
-                        <input class="form-control" 
-                                id="name" 
-                                type="text"
-                                name="name"
-                                placeholder="Введіть ім'я..."/>
-                        <label for="name">Ім'я користувача</label>
+                    {{form.username(class_='form-control')}} {{form.username.label}} 
                     </div>
                     <div class="form-floating mb-3">
-                        <input class="form-control" 
-                                id="password" 
-                                type="password" 
-                                name="password"
-                                placeholder="1234"/>
-                        <label for="password">Пароль</label>
-                    </div>        
-                    <!-- Submit Button-->
-                    <button class="btn btn-primary btn-xl" id="submitButton" type="submit">Send</button>
+                    {{form.password(class_='form-control')}}  {{form.password.label}} 
+                    </div>
+                    <div class="form-floating mb-3">
+                    {{form.remember(class_='form-control')}} {{form.remember.label}} 
+                    </div>
+                    {{form.submit(class_='btn btn-primary btn-xl')}}
                 </form>
             </div>
             {% if login_failed %}

@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, json, make_response, session
-import os
 from datetime import datetime
 from app import app
+from app.forms import LoginForm
+import os
 import random
 
 my_skills = ["C++", "HTML & CSS", "MySQL", "JavaScript", "Java", "Python", "OpenGL", "Paint.net"]
@@ -42,6 +43,8 @@ def hobbies():
 def login():
     user_os, user_agent, current_time = get_user_info()
 
+    form = LoginForm()
+
     login_failure = False
 
     if request.method == "POST":
@@ -63,9 +66,9 @@ def login():
             return redirect(url_for('info', user=session['name']))
         else:
             login_failure = True
-            return redirect(url_for('login'))
+            return render_template('login.html', form=form, user_os=user_os, user_agent=user_agent, current_time=current_time, login_failed=login_failure)
     
-    return render_template('login.html', user_os=user_os, user_agent=user_agent, current_time=current_time, login_failed=login_failure)
+    return render_template('login.html', form=form, user_os=user_os, user_agent=user_agent, current_time=current_time, login_failed=login_failure)
 
 @app.route('/info', methods=['GET'])
 def info():

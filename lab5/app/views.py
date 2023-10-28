@@ -54,14 +54,18 @@ def login():
     if form.validate_on_submit():
         form_name = form.username.data
         form_password = form.password.data
+        form_remember = form.remember.data
 
         if json_name == form_name and json_password == form_password:
             user_id = random.randint(1, 10000)
             session['userId'] = user_id
-            session['name'] = form_name
-            session['password'] = form_password
             flash("Вхід виконано", category=("success"))
-            return redirect(url_for('info', user=session['name']))
+            if form_remember:
+                session['name'] = form_name
+                session['password'] = form_password
+                return redirect(url_for('info', user=session['name']))
+            else:
+                return redirect(url_for('home'))
         else:
             flash("Вхід не виконано", category=("warning"))
             return render_template('login.html', form=form, user_os=user_os, user_agent=user_agent, current_time=current_time)
@@ -96,13 +100,15 @@ def skills(id=None):
 
 def set_cookie(key, value, max_age):
     user_os, user_agent, current_time = get_user_info()
-    response = make_response(render_template('cookie_added.html', user_os=user_os, user_agent=user_agent, current_time=current_time))
+    flash("Кукі додано", category=("success"))
+    response = make_response(render_template('home.html', user_os=user_os, user_agent=user_agent, current_time=current_time))
     response.set_cookie(key, value, max_age=max_age)
     return response
 
 def delete_cookie(key):
     user_os, user_agent, current_time = get_user_info()
-    response = make_response(render_template('cookie_deleted.html', user_os=user_os, user_agent=user_agent, current_time=current_time))
+    flash("Кукі видалено", category=("danger"))
+    response = make_response(render_template('home.html', user_os=user_os, user_agent=user_agent, current_time=current_time))
     response.delete_cookie(key)
     return response
 
@@ -122,18 +128,21 @@ def remove_cookie():
 
     if key:
         user_os, user_agent, current_time = get_user_info()
-        response = make_response(render_template('cookie_deleted.html', user_os=user_os, user_agent=user_agent, current_time=current_time))
+        flash("Кукі видалено", category=("dark"))
+        response = make_response(render_template('home.html', user_os=user_os, user_agent=user_agent, current_time=current_time))
         response.delete_cookie(key)
         return response
     else:
+        flash("Виникла помилка. Повідомте про ключ нам", category=("info"))
         user_os, user_agent, current_time = get_user_info()
-        response = make_response(render_template('cookie_error.html', user_os=user_os, user_agent=user_agent, current_time=current_time))
+        response = make_response(render_template('home.html', user_os=user_os, user_agent=user_agent, current_time=current_time))
         return response
 
 @app.route('/remove_all_cookies', methods=['GET'])
 def remove_all_cookies():
     user_os, user_agent, current_time = get_user_info()
-    response = make_response(render_template('all_cookies_deleted.html', user_os=user_os, user_agent=user_agent, current_time=current_time))
+    flash("Усі кукі видалено", category=("danger"))
+    response = make_response(render_template('home.html', user_os=user_os, user_agent=user_agent, current_time=current_time))
     cookies = request.cookies
 
     for key in cookies.keys():

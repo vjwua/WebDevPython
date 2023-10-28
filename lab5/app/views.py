@@ -63,6 +63,7 @@ def login():
             return redirect(url_for('info', user=session['name']))
         else:
             login_failure = True
+            return redirect(url_for('login'))
     
     return render_template('login.html', user_os=user_os, user_agent=user_agent, current_time=current_time, login_failed=login_failure)
 

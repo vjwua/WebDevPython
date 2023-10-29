@@ -26,22 +26,18 @@ def home():
 
 @app.route('/cv')
 def cv():
-    user_os, user_agent, current_time = get_user_info()
-    return render_template('cv.html', user_os=user_os, user_agent=user_agent, current_time=current_time)
+    return render_template('cv.html')
 
 @app.route('/edu')
 def edu():
-    user_os, user_agent, current_time = get_user_info()
-    return render_template('edu.html', user_os=user_os, user_agent=user_agent, current_time=current_time)
+    return render_template('edu.html')
 
 @app.route('/hobbies')
 def hobbies():
-    user_os, user_agent, current_time = get_user_info()
-    return render_template('hobbies.html', user_os=user_os, user_agent=user_agent, current_time=current_time)
+    return render_template('hobbies.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    user_os, user_agent, current_time = get_user_info()
     form = LoginForm()
 
     filename = os.path.join(app.static_folder, 'data', 'auth.json')
@@ -68,47 +64,43 @@ def login():
                 return redirect(url_for('home'))
         else:
             flash("Вхід не виконано", category=("warning"))
-            return render_template('login.html', form=form, user_os=user_os, user_agent=user_agent, current_time=current_time)
+            return render_template('login.html', form=form)
     
-    return render_template('login.html', form=form, user_os=user_os, user_agent=user_agent, current_time=current_time)
+    return render_template('login.html', form=form)
 
 @app.route('/info', methods=['GET'])
 def info():
     cookies = request.cookies
-    user_os, user_agent, current_time = get_user_info()
-    return render_template('info.html', user_os=user_os, user_agent=user_agent, current_time=current_time, cookies=cookies)
+    return render_template('info.html', cookies=cookies)
 
 @app.route('/logout')
 def logout():
-    session.pop('userId')
     session.pop('name')
+    session.pop('userId')
     session.pop('password')    
     return redirect(url_for("login"))
 
 @app.route('/skills/')
 @app.route('/skills/<int:id>')
 def skills(id=None):
-    user_os, user_agent, current_time = get_user_info()
     if id is not None:
         if 0 <= id < len(my_skills):
             skill = my_skills[id]
-            return render_template('skills.html', skill=skill, user_os=user_os, user_agent=user_agent, current_time=current_time)
+            return render_template('skills.html', skill=skill)
         else:
-            return render_template('skills.html', user_os=user_os, user_agent=user_agent, current_time=current_time)
+            return render_template('skills.html')
     else:
-        return render_template('skills.html', skills=my_skills, total_skills=len(my_skills), user_os=user_os, user_agent=user_agent, current_time=current_time)
+        return render_template('skills.html', skills=my_skills, total_skills=len(my_skills))
 
 def set_cookie(key, value, max_age):
-    user_os, user_agent, current_time = get_user_info()
     flash("Кукі додано", category=("success"))
-    response = make_response(render_template('home.html', user_os=user_os, user_agent=user_agent, current_time=current_time))
+    response = make_response(render_template('home.html'))
     response.set_cookie(key, value, max_age=max_age)
     return response
 
 def delete_cookie(key):
-    user_os, user_agent, current_time = get_user_info()
     flash("Кукі видалено", category=("danger"))
-    response = make_response(render_template('home.html', user_os=user_os, user_agent=user_agent, current_time=current_time))
+    response = make_response(render_template('home.html'))
     response.delete_cookie(key)
     return response
 
@@ -127,22 +119,19 @@ def remove_cookie():
     key = request.args.get('key')
 
     if key:
-        user_os, user_agent, current_time = get_user_info()
         flash("Кукі видалено", category=("dark"))
-        response = make_response(render_template('home.html', user_os=user_os, user_agent=user_agent, current_time=current_time))
+        response = make_response(render_template('home.html'))
         response.delete_cookie(key)
         return response
     else:
         flash("Виникла помилка. Повідомте про ключ нам", category=("info"))
-        user_os, user_agent, current_time = get_user_info()
-        response = make_response(render_template('home.html', user_os=user_os, user_agent=user_agent, current_time=current_time))
+        response = make_response(render_template('home.html'))
         return response
 
 @app.route('/remove_all_cookies', methods=['GET'])
 def remove_all_cookies():
-    user_os, user_agent, current_time = get_user_info()
     flash("Усі кукі видалено", category=("danger"))
-    response = make_response(render_template('home.html', user_os=user_os, user_agent=user_agent, current_time=current_time))
+    response = make_response(render_template('home.html'))
     cookies = request.cookies
 
     for key in cookies.keys():
@@ -155,8 +144,7 @@ def remove_all_cookies():
 def change_password():
     new_password = request.form.get('new_password')
     session['password'] = new_password
-    user_os, user_agent, current_time = get_user_info()
-    return render_template('password_changed.html', user_os=user_os, user_agent=user_agent, current_time=current_time)
+    return render_template('password_changed.html')
 
 @app.route("/main")
 def main():

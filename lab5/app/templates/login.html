@@ -15,7 +15,7 @@
         <!-- Contact Section Form-->
         <div class="row justify-content-center">
             <div class="col-lg-8 col-xl-7">
-                <form id="contactForm" action={{url_for("login")}} method="POST">
+                <form id="contactForm" action={{url_for("login")}} method="POST" novalidate>
                     {% from "_render_field.html" import render_field %}
                     {{form.csrf_token}}
                     <div class="form-floating mb-3">

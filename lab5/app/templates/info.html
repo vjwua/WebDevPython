@@ -152,15 +152,15 @@
     <div class="row justify-content-center">
         <div class="col-lg-8 col-xl-7">
             <form id="contactForm" action="/change_password" method="POST">
+                {% from "_render_field.html" import render_field %}
+                {{ form.csrf_token }}
                 <div class="form-floating mb-3">
-                    <input class="form-control" 
-                            id="new_password" 
-                            type="password"
-                            name="new_password"
-                    <label for="name">Новий пароль</label>
+                    {{ render_field(form.password) }}
                 </div>
-                <!-- Submit Button-->
-                <button class="btn btn-primary btn-xl" id="submitButton" type="submit">Змінити</button>
+                <div class="form-floating mb-3">
+                    {{ render_field(form.confirm_password) }}
+                </div>
+                {{form.submit(class_='btn btn-primary btn-xl')}}
             </form>
         </div>
     </div>

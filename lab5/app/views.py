@@ -1,7 +1,7 @@
 from flask import Flask, flash, render_template, request, redirect, url_for, json, make_response, session
 from datetime import datetime
 from app import app
-from app.forms import LoginForm
+from app.forms import LoginForm, ChangePasswordForm
 import os
 import random
 
@@ -41,8 +41,8 @@ def login():
     form = LoginForm()
 
     filename = os.path.join(app.static_folder, 'data', 'auth.json')
-    with open(filename) as test_file:
-        data = json.load(test_file)
+    with open(filename) as auth_file:
+        data = json.load(auth_file)
 
     json_name = data['name']
     json_password = data['password']
@@ -62,7 +62,7 @@ def login():
                 return redirect(url_for('info', user=session['name']))
             else:
                 flash("Ви не запамʼятали себе, введіть дані ще раз", category=("warning"))
-                return redirect(url_for('login'))
+                return redirect(url_for('home'))
         else:
             flash("Вхід не виконано", category=("warning"))
             return redirect(url_for('login'))
@@ -72,7 +72,9 @@ def login():
 @app.route('/info', methods=['GET'])
 def info():
     cookies = request.cookies
-    return render_template('info.html', cookies=cookies)
+    form = ChangePasswordForm()
+
+    return render_template('info.html', cookies=cookies, form=form)
 
 @app.route('/logout')
 def logout():
@@ -142,9 +144,37 @@ def remove_all_cookies():
 
 @app.route('/change_password', methods=['POST'])
 def change_password():
-    new_password = request.form.get('new_password')
-    session['password'] = new_password
-    return render_template('password_changed.html')
+    form = ChangePasswordForm()
+
+    if form.validate_on_submit():
+        new_password = form.password.data
+        confirm_new_password = form.confirm_password.data
+        if new_password != '':
+            if new_password == confirm_new_password:
+                session['password'] = new_password
+
+                filename = os.path.join(app.static_folder, 'data', 'auth.json')
+                with open(filename) as auth_file:
+                    data = json.load(auth_file)
+
+                new_admin_data = {
+                    'name': data['name'],
+                    'password': new_password
+                }
+
+                new_passwd_json = json.dumps(new_admin_data, indent=2)
+
+                with open(filename, "w") as outfile:
+                    outfile.write(new_passwd_json)
+
+                flash("Пароль успішно змінено", category=("success"))
+                return redirect(url_for('info'))
+
+            flash("Ви не змінили пароль", category=("danger"))
+            return redirect(url_for('info'))
+
+    flash("Ви не набрали пароль. Спробуйте ще раз", category=("danger"))
+    return redirect(url_for('info'))
 
 @app.route("/main")
 def main():

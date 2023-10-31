@@ -4,3 +4,4 @@ app = Flask(__name__)
 app.secret_key = b"secret"
 
 from app import views
+from app import database

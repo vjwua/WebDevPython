@@ -182,6 +182,9 @@
                 <div class="form-floating mb-3">
                     {{ render_field(todo_form.new_task) }}
                 </div>
+                <div class="form-floating mb-3">
+                    {{ render_field(todo_form.description) }}
+                </div>
                 {{todo_form.submit(class_='btn btn-primary btn-xl')}}
             </form>
             <table class="table table-light">
@@ -189,6 +192,7 @@
                     <tr class = "todoTable">
                         <th class = "todoTable">Номер</th>
                         <th class = "todoTable">Значення</th>
+                        <th class = "todoTable">Опис</th>
                         <th class = "todoTable">Статус</th>
                         <th class = "todoTable">Дії</th>
                     </tr>
@@ -197,7 +201,8 @@
                     {% for todo in todo_list %}
                     <tr>
                         <th scope="row">{{ todo.id }}</th>
-                        <td>{{ todo.title }}</td>
+                        <td class = "todoTable">{{ todo.title }}</td>
+                        <td class = "todoTable">{{ todo.description }}</td>
                         <td class = "todoTable">
                             {% if todo.complete == False %}
                             <div class="alert alert-secondary" roles="alert">В роботі</div>

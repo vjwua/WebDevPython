@@ -9,3 +9,5 @@ lab5/env
 lab5/app/__pycache__
 lab6/.vscode/settings.json
 lab6/app/__pycache__
+lab6/migrations/versions/__pycache__/8d69faa16367_.cpython-311.pyc
+lab6/migrations/__pycache__/env.cpython-311.pyc

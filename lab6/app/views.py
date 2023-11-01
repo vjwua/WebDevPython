@@ -185,7 +185,8 @@ def create_todo():
 
     if todo_form.validate_on_submit():
         new_task = todo_form.new_task.data
-        new_todo = Todo(title=new_task, complete=False)
+        description = todo_form.description.data
+        new_todo = Todo(title=new_task, description=description, complete=False)
         db.session.add(new_todo)
         db.session.commit()
         flash("Створення виконано", category=("success"))

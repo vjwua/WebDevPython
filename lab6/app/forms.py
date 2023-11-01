@@ -21,3 +21,7 @@ class ChangePasswordForm(FlaskForm):
                             Length(min=4, max=10)
                         ])
     submit = SubmitField("Увійти")
+
+class CreateTodoForm(FlaskForm):
+    new_task = StringField("Задача", validators=[DataRequired("Це поле обовʼязкове")])
+    submit = SubmitField("Створити")

@@ -1,7 +1,8 @@
 from flask import Flask, flash, render_template, request, redirect, url_for, json, make_response, session
 from datetime import datetime
 from app import app
-from app.forms import LoginForm, ChangePasswordForm
+from app.forms import LoginForm, ChangePasswordForm, CreateTodoForm
+from app.database import db, Todo
 import os
 import random
 
@@ -73,8 +74,10 @@ def login():
 def info():
     cookies = request.cookies
     form = ChangePasswordForm()
+    todo_form = CreateTodoForm()
+    todo_list = db.session.query(Todo).all()
 
-    return render_template('info.html', cookies=cookies, form=form)
+    return render_template('info.html', cookies=cookies, form=form, todo_form=todo_form, todo_list=todo_list)
 
 @app.route('/logout')
 def logout():
@@ -175,6 +178,44 @@ def change_password():
 
     flash("Ви не набрали пароль. Спробуйте ще раз", category=("danger"))
     return redirect(url_for('info'))
+
+@app.route("/create_todo", methods=['POST'])
+def create_todo():
+    todo_form = CreateTodoForm()
+
+    if todo_form.validate_on_submit():
+        new_task = todo_form.new_task.data
+        new_todo = Todo(title=new_task, complete=False)
+        db.session.add(new_todo)
+        db.session.commit()
+        flash("Створення виконано", category=("success"))
+        return redirect(url_for("info"))
+    
+    flash("Помилка при створенні", category=("danger"))
+    return redirect(url_for("info"))
+
+@app.route("/read_todo/<int:todo_id>")
+def read_todo(todo_id=None):
+    todo = db.get_or_404(Todo.id, todo_id)
+    return redirect(url_for("info"))
+
+@app.route("/update_todo/<int:todo_id>")
+def update_todo(todo_id=None):
+    todo = Todo.query.get(todo_id)
+
+    todo.complete = not todo.complete
+    db.session.commit()
+    flash("Оновлення виконано", category=("success"))
+    return redirect(url_for("info"))
+
+@app.route("/delete_todo/<int:todo_id>")
+def delete_todo(todo_id=None):
+    todo = Todo.query.get(todo_id)
+
+    db.session.delete(todo)
+    db.session.commit()
+    flash("Видалення виконано", category=("success"))
+    return redirect(url_for("info"))
 
 @app.route("/main")
 def main():

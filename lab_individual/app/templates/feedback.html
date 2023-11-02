@@ -44,6 +44,7 @@
                         <th class = "feedbackTable">Імʼя</th>
                         <th class = "feedbackTable">Опис</th>
                         <th class = "feedbackTable">Оцінка</th>
+                        <th class = "feedbackTable">Корисний?</th>
                         <th class = "feedbackTable">Дії</th>
                     </tr>
                 </thead>
@@ -62,7 +63,15 @@
                             <div class="alert alert-success" roles="alert">{{ feedback.rate }}</div>
                             {% endif %}
                         </td>
+                        <td class = "feedbackTable">
+                            {% if feedback.useful == False %}
+                            <div class="alert alert-secondary" roles="alert">Ні</div>
+                            {% else %}
+                            <div class="alert alert-success" roles="alert">Так</div>
+                            {% endif %}
+                        </td>
                         <td>
+                            <a class="btn btn-success" href="/update_feedback/{{ feedback.id }}">Оновити</a>
                             <a class="btn btn-danger ms-1" href="/delete_feedback/{{ feedback.id }}">Видалити</a>
                         </td>
                     </tr>

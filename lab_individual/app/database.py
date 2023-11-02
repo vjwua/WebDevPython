@@ -19,6 +19,7 @@ class Feedback(db.Model):
     email = db.Column(db.String(100))
     description = db.Column(db.String(300))
     rate = db.Column(db.Integer)
+    useful = db.Column(db.Boolean)
 
 with app.app_context():
     db.create_all()

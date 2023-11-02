@@ -230,6 +230,26 @@ def feedback():
 
     return render_template('feedback.html', feedback_form=feedback_form, feedback_list=feedback_list)
 
+@app.route("/create_feedback", methods=['POST'])
+def create_feedback():
+    feedback_form = CreateFeedbackForm()
+
+    if feedback_form.validate_on_submit():
+        name = feedback_form.name.data
+        email = feedback_form.email.data
+        description = feedback_form.description.data
+        rate = feedback_form.rate.data
+
+        new_feedback = Feedback(name=name, email=email, description=description, rate=rate)
+        
+        db.session.add(new_feedback)
+        db.session.commit()
+        flash("Створення виконано", category=("success"))
+        return redirect(url_for("feedback"))
+    
+    flash("Помилка при створенні", category=("danger"))
+    return redirect(url_for("feedback"))
+
 @app.route("/main")
 def main():
     return redirect(url_for("home"))

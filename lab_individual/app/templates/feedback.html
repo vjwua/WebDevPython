@@ -21,6 +21,7 @@
                 </div>
                 <div class="form-floating mb-3">
                     {{ render_field(feedback_form.email) }}
+                    *Ваша пошта не буде відображена
                 </div>
                 <div class="form-floating mb-3">
                     {{ render_field(feedback_form.description) }}
@@ -50,10 +51,17 @@
                     {% for feedback in feedback_list %}
                     <tr>
                         <th scope="row">{{ feedback.id }}</th>
-                        <td class = "feedbackTable">{{ feedback.title }}</td>
-                        <td class = "feedbackTable">{{ feedback.name }}</feedback> }}</td>
+                        <td class = "feedbackTable">{{ feedback.name }}</feedback></td>
                         <td class = "feedbackTable">{{ feedback.description }}</td>
-                        <td class = "feedbackTable">{{ feedback.rate }}</td>
+                        <td class = "feedbackTable">
+                            {% if feedback.rate < 5 %}
+                            <div class="alert alert-danger" roles="alert">{{ feedback.rate }}</div>
+                            {% elif feedback.rate > 4 and feedback.rate < 9 %}
+                            <div class="alert alert-warning" roles="alert">{{ feedback.rate }}</div>
+                            {% elif feedback.rate > 8 %}
+                            <div class="alert alert-success" roles="alert">{{ feedback.rate }}</div>
+                            {% endif %}
+                        </td>
                         <td>
                             <a class="btn btn-success" href="/update_feedback/{{ feedback.id }}">Оновити</a>
                             <a class="btn btn-danger ms-1" href="/delete_feedback/{{ feedback.id }}">Видалити</a>

@@ -259,7 +259,7 @@ def read_feedback(feedback_id=None):
 def delete_feedback(feedback_id=None):
     feedback = Feedback.query.get_or_404(feedback_id)
 
-    db.session.delete(todo)
+    db.session.delete(feedback)
     db.session.commit()
     flash("Видалення виконано", category=("success"))
     return redirect(url_for("feedback"))

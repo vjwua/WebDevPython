@@ -74,10 +74,8 @@ def login():
 def info():
     cookies = request.cookies
     form = ChangePasswordForm()
-    todo_form = CreateTodoForm()
-    todo_list = db.session.query(Todo).all()
 
-    return render_template('info.html', cookies=cookies, form=form, todo_form=todo_form, todo_list=todo_list)
+    return render_template('info.html', cookies=cookies, form=form)
 
 @app.route('/logout')
 def logout():
@@ -179,6 +177,13 @@ def change_password():
     flash("Ви не набрали пароль. Спробуйте ще раз", category=("danger"))
     return redirect(url_for('info'))
 
+@app.route("/todo")
+def todo():
+    todo_form = CreateTodoForm()
+    todo_list = db.session.query(Todo).all()
+
+    return render_template('todo.html', todo_form=todo_form, todo_list=todo_list)
+
 @app.route("/create_todo", methods=['POST'])
 def create_todo():
     todo_form = CreateTodoForm()
@@ -190,15 +195,15 @@ def create_todo():
         db.session.add(new_todo)
         db.session.commit()
         flash("Створення виконано", category=("success"))
-        return redirect(url_for("info"))
+        return redirect(url_for("todo"))
     
     flash("Помилка при створенні", category=("danger"))
-    return redirect(url_for("info"))
+    return redirect(url_for("todo"))
 
 @app.route("/read_todo/<int:todo_id>")
 def read_todo(todo_id=None):
     todo = db.get_or_404(Todo.id, todo_id)
-    return redirect(url_for("info"))
+    return redirect(url_for("todo"))
 
 @app.route("/update_todo/<int:todo_id>")
 def update_todo(todo_id=None):
@@ -207,7 +212,7 @@ def update_todo(todo_id=None):
     todo.complete = not todo.complete
     db.session.commit()
     flash("Оновлення виконано", category=("success"))
-    return redirect(url_for("info"))
+    return redirect(url_for("todo"))
 
 @app.route("/delete_todo/<int:todo_id>")
 def delete_todo(todo_id=None):
@@ -216,7 +221,7 @@ def delete_todo(todo_id=None):
     db.session.delete(todo)
     db.session.commit()
     flash("Видалення виконано", category=("success"))
-    return redirect(url_for("info"))
+    return redirect(url_for("todo"))
 
 @app.route("/main")
 def main():

@@ -241,13 +241,27 @@ def create_feedback():
         rate = feedback_form.rate.data
 
         new_feedback = Feedback(name=name, email=email, description=description, rate=rate)
-        
+
         db.session.add(new_feedback)
         db.session.commit()
         flash("Створення виконано", category=("success"))
         return redirect(url_for("feedback"))
     
     flash("Помилка при створенні", category=("danger"))
+    return redirect(url_for("feedback"))
+
+@app.route("/read_feedback/<int:feedback_id>")
+def read_feedback(feedback_id=None):
+    feedback = Feedback.query.get_or_404(feedback_id)
+    return redirect(url_for("feedback"))
+
+@app.route("/delete_feedback/<int:feedback_id>")
+def delete_feedback(feedback_id=None):
+    feedback = Feedback.query.get_or_404(feedback_id)
+
+    db.session.delete(todo)
+    db.session.commit()
+    flash("Видалення виконано", category=("success"))
     return redirect(url_for("feedback"))
 
 @app.route("/main")

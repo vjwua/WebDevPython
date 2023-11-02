@@ -202,12 +202,12 @@ def create_todo():
 
 @app.route("/read_todo/<int:todo_id>")
 def read_todo(todo_id=None):
-    todo = db.get_or_404(Todo.id, todo_id)
+    todo = Todo.query.get_or_404(todo_id)
     return redirect(url_for("todo"))
 
 @app.route("/update_todo/<int:todo_id>")
 def update_todo(todo_id=None):
-    todo = Todo.query.get(todo_id)
+    todo = Todo.query.get_or_404(todo_id)
 
     todo.complete = not todo.complete
     db.session.commit()
@@ -216,7 +216,7 @@ def update_todo(todo_id=None):
 
 @app.route("/delete_todo/<int:todo_id>")
 def delete_todo(todo_id=None):
-    todo = Todo.query.get(todo_id)
+    todo = Todo.query.get_or_404(todo_id)
 
     db.session.delete(todo)
     db.session.commit()

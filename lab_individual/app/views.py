@@ -1,8 +1,8 @@
 from flask import Flask, flash, render_template, request, redirect, url_for, json, make_response, session
 from datetime import datetime
 from app import app
-from app.forms import LoginForm, ChangePasswordForm, CreateTodoForm
-from app.database import db, Todo
+from app.forms import LoginForm, ChangePasswordForm, CreateTodoForm, CreateFeedbackForm
+from app.database import db, Todo, Feedback
 import os
 import random
 
@@ -222,6 +222,13 @@ def delete_todo(todo_id=None):
     db.session.commit()
     flash("Видалення виконано", category=("success"))
     return redirect(url_for("todo"))
+
+@app.route("/feedback")
+def feedback():
+    feedback_form = CreateFeedbackForm()
+    feedback_list = db.session.query(Feedback).all()
+
+    return render_template('feedback.html', feedback_form=feedback_form, feedback_list=feedback_list)
 
 @app.route("/main")
 def main():

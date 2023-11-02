@@ -13,6 +13,13 @@ class Todo(db.Model):
     description = db.Column(db.String(200))
     complete = db.Column(db.Boolean)
 
+class Feedback(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
+    email = db.Column(db.String(100))
+    description = db.Column(db.String(300))
+    rate = db.Column(db.Integer)
+
 with app.app_context():
     db.create_all()
 

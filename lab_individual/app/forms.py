@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField, EmailField
 from wtforms.validators import DataRequired, Length
 
 class LoginForm(FlaskForm):
@@ -28,9 +28,10 @@ class CreateTodoForm(FlaskForm):
     submit = SubmitField("Створити")
 
 class CreateFeedbackForm(FlaskForm):
-    title = StringField("Імʼя", validators=[DataRequired("Це поле обовʼязкове"), Length(min=1, max=100)])
-    description = StringField("Опишіть, що ви думаєте", validators=[DataRequired("Це поле обовʼязкове"), Length(min=1, max=200)])
-    rate = SelectField("Оцінка", choice=[
+    name = StringField("Імʼя", validators=[DataRequired("Це поле обовʼязкове"), Length(min=1, max=100)])
+    email = EmailField("Пошта", validators=[DataRequired("Це поле обовʼязкове"), Length(min=1, max=100)])
+    description = StringField("Опишіть, що ви думаєте", validators=[DataRequired("Це поле обовʼязкове"), Length(min=1, max=300)])
+    rate = SelectField("Оцінка", choices=[
         (1, 1), (2, 2), (3, 3), (4, 4), (5, 5)
     ])
     submit = SubmitField("Надіслати")

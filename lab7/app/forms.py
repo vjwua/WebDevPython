@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, FileField
-from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo
+from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo, ValidationError
+from .database import User
 
 class LoginForm(FlaskForm):
     email = StringField("Електронна пошта", validators=[DataRequired("Це поле обовʼязкове"), Email()])
@@ -35,6 +36,14 @@ class RegisterForm(FlaskForm):
 
     image_file = FileField("Виберіть файл")
     submit = SubmitField("Створити")
+
+    def validate_email(self, field):
+        if User.query.filter_by(email=field.data).first():
+            raise ValidationError('The user with such email has been already registered.')
+
+    def validate_username(self, field):
+        if User.query.filter_by(username=field.data).first():
+            raise ValidationError('Це імʼя уже використовується.')
 
 class CreateTodoForm(FlaskForm):
     new_task = StringField("Задача", validators=[DataRequired("Це поле обовʼязкове"), Length(min=1, max=100)])

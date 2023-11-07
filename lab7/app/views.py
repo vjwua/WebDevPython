@@ -1,4 +1,5 @@
 from flask import Flask, flash, render_template, request, redirect, url_for, send_file, make_response, session
+from flask_bcrypt import bcrypt
 from datetime import datetime
 from app import app
 from app.forms import LoginForm, ChangePasswordForm, CreateTodoForm, RegisterForm
@@ -48,7 +49,6 @@ def register():
         confirm_password = form.confirm_password.data
         image_file = form.image_file.data
         if password == confirm_password:
-
             new_user = User(username=username, email=email, password=password, image_file=image_file)
             db.session.add(new_user)
             db.session.commit()
@@ -83,6 +83,11 @@ def login():
             return redirect(url_for('login'))
     
     return render_template('login.html', form=form)
+
+@app.route('/users')
+def users():
+    all_users = User.query.all()
+    return render_template('users.html', all_users=all_users)
 
 @app.route('/info', methods=['GET'])
 def info():

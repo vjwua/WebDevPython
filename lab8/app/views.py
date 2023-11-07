@@ -1,6 +1,6 @@
 from flask import Flask, flash, render_template, request, redirect, url_for, send_file, make_response, session
 from flask_bcrypt import bcrypt
-from flask_login import login_user, current_user, logout_user
+from flask_login import login_user, current_user, logout_user, login_required
 
 from app import app
 from app.forms import LoginForm, ChangePasswordForm, CreateTodoForm, RegisterForm
@@ -80,12 +80,11 @@ def login():
             if form_remember:
                 user_id = random.randint(1, 10000)
                 session['userId'] = user_id
-                session['name'] = user.username
                 session['email'] = form_email
                 session['password'] = form_password
                 login_user(user, remember=form.remember.data)
                 flash("Вхід виконано", category=("success"))
-                return redirect(url_for('info', user=session['name']))
+                return redirect(url_for('account'))
             else:
                 flash("Ви не запамʼятали себе, введіть дані ще раз", category=("warning"))
                 return redirect(url_for('home'))
@@ -96,11 +95,13 @@ def login():
     return render_template('login.html', form=form)
 
 @app.route('/users')
+@login_required
 def users():
     all_users = User.query.all()
     return render_template('users.html', all_users=all_users)
 
 @app.route('/info', methods=['GET'])
+@login_required
 def info():
     cookies = request.cookies
     form = ChangePasswordForm()
@@ -109,11 +110,15 @@ def info():
 
 @app.route('/logout')
 def logout():
-    session.pop('name')
     session.pop('userId')
     session.pop('password')
     logout_user()
     return redirect(url_for("login"))
+
+@app.route("/account")
+@login_required
+def account():
+    return render_template('account.html')
 
 @app.route('/skills/')
 @app.route('/skills/<int:id>')
@@ -209,6 +214,7 @@ def change_password():
     return redirect(url_for('info'))
 
 @app.route("/todo")
+@login_required
 def todo():
     todo_form = CreateTodoForm()
     todo_list = db.session.query(Todo).all()

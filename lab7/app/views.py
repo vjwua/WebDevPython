@@ -1,10 +1,11 @@
 from flask import Flask, flash, render_template, request, redirect, url_for, json, make_response, session
 from datetime import datetime
 from app import app
-from app.forms import LoginForm, ChangePasswordForm, CreateTodoForm
-from app.database import db, Todo
+from app.forms import LoginForm, ChangePasswordForm, CreateTodoForm, RegisterForm
+from app.database import db, Todo, User
 import os
 import random
+import email_validator
 
 my_skills = ["C++", "HTML & CSS", "MySQL", "JavaScript", "Java", "Python", "OpenGL", "Paint.net"]
 
@@ -41,23 +42,18 @@ def hobbies():
 def login():
     form = LoginForm()
 
-    filename = os.path.join(app.static_folder, 'data', 'auth.json')
-    with open(filename) as auth_file:
-        data = json.load(auth_file)
-
-    json_name = data['name']
-    json_password = data['password']
-
     if form.validate_on_submit():
-        form_name = form.username.data
+        user = User.query.filter_by(email=form.email.data).first()
+        form_email = form.email.data
         form_password = form.password.data
         form_remember = form.remember.data
 
-        if json_name == form_name and json_password == form_password:
+        if user and user.validate_password(form_password) and user.email == form.email.data:
             if form_remember:
                 user_id = random.randint(1, 10000)
                 session['userId'] = user_id
-                session['name'] = form_name
+                session['name'] = user.username
+                session['email'] = form_email
                 session['password'] = form_password
                 flash("Вхід виконано", category=("success"))
                 return redirect(url_for('info', user=session['name']))

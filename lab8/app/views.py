@@ -1,9 +1,12 @@
 from flask import Flask, flash, render_template, request, redirect, url_for, send_file, make_response, session
 from flask_bcrypt import bcrypt
-from datetime import datetime
+from flask_login import login_user, current_user, logout_user
+
 from app import app
 from app.forms import LoginForm, ChangePasswordForm, CreateTodoForm, RegisterForm
 from app.database import db, Todo, User
+
+from datetime import datetime
 import os
 import random
 import email_validator
@@ -41,7 +44,11 @@ def hobbies():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    if current_user.is_authenticated:
+        return redirect(url_for('info'))
+    
     form = RegisterForm()
+
     if form.validate_on_submit():
         username = form.username.data
         email = form.email.data
@@ -58,6 +65,9 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for('info'))
+    
     form = LoginForm()
 
     if form.validate_on_submit():
@@ -73,6 +83,7 @@ def login():
                 session['name'] = user.username
                 session['email'] = form_email
                 session['password'] = form_password
+                login_user(user, remember=form.remember.data)
                 flash("Вхід виконано", category=("success"))
                 return redirect(url_for('info', user=session['name']))
             else:
@@ -100,7 +111,8 @@ def info():
 def logout():
     session.pop('name')
     session.pop('userId')
-    session.pop('password')    
+    session.pop('password')
+    logout_user()
     return redirect(url_for("login"))
 
 @app.route('/skills/')

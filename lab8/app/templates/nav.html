@@ -20,7 +20,7 @@
                 <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href={{url}}> {{ name | upper}} </a></li>
                 {% endfor %}
 
-                {% if userId %}
+                {% if current_user.is_authenticated %}
                     <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href={{ url_for('todo') }}> БД Todo </a></li>
                     <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href={{ url_for('users') }}> БД User </a></li>
                     <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href={{ url_for('info') }}> Профіль </a></li>

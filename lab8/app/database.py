@@ -1,13 +1,12 @@
-from app import app
+from app import app, bcrypt, login_manager
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from flask_bcrypt import Bcrypt
+from flask_login import UserMixin
 import os
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL", "sqlite:///flaskdb.db")
 
 db = SQLAlchemy(app)
-bcrypt = Bcrypt(app)
 
 class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -15,7 +14,11 @@ class Todo(db.Model):
     description = db.Column(db.String(200))
     complete = db.Column(db.Boolean)
 
-class User(db.Model):
+@login_manager.user_loader
+def user_loader(user_id):
+    return User.query.get(int(user_id))
+
+class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)

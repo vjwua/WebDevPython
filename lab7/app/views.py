@@ -1,4 +1,4 @@
-from flask import Flask, flash, render_template, request, redirect, url_for, json, make_response, session
+from flask import Flask, flash, render_template, request, redirect, url_for, send_file, make_response, session
 from datetime import datetime
 from app import app
 from app.forms import LoginForm, ChangePasswordForm, CreateTodoForm, RegisterForm
@@ -37,6 +37,24 @@ def edu():
 @app.route('/hobbies')
 def hobbies():
     return render_template('hobbies.html')
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegisterForm()
+    if form.validate_on_submit():
+        username = form.username.data
+        email = form.email.data
+        password = form.password.data
+        confirm_password = form.confirm_password.data
+        image_file = form.image_file.data
+        if password == confirm_password:
+
+            new_user = User(username=username, email=email, password=password, image_file=image_file)
+            db.session.add(new_user)
+            db.session.commit()
+        flash("Аккаунт зареєстровано", category=("success"))
+        return redirect(url_for("login"))
+    return render_template("register.html", form=form)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

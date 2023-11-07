@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, FileField
 from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo
 
 class LoginForm(FlaskForm):
@@ -26,12 +26,15 @@ class RegisterForm(FlaskForm):
     username = StringField("Імʼя", validators=[DataRequired(message="Імʼя повинен містити від 4 до 20 символів"), Length(min=4, max=20),
     Regexp('^[A-Za-z][A-Za-z0-9_.]*$', message='Імʼя має містити букви, цифри, крапку та нижнє підкреслення')])
 
-    email = StringField("Електронна пошта", validators=[DataRequired(message="This field is required"), Email()])
+    email = StringField("Електронна пошта", validators=[DataRequired(message="Це поле обовʼязкове"), Email()])
 
     password = PasswordField("Пароль", validators=[DataRequired(message="Це поле обовʼязкове"), Length(min=6)])
 
     confirm_password = PasswordField("Підтвердити пароль", validators=[DataRequired(message="Це поле обовʼязкове"), Length(min=6),
     EqualTo('password', message='Паролі не збігаються, спробуйте ще раз')])
+
+    image_file = FileField("Виберіть файл")
+    submit = SubmitField("Створити")
 
 class CreateTodoForm(FlaskForm):
     new_task = StringField("Задача", validators=[DataRequired("Це поле обовʼязкове"), Length(min=1, max=100)])

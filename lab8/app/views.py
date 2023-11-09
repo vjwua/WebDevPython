@@ -181,7 +181,6 @@ def remove_all_cookies():
 @app.route('/change_password', methods=['POST'])
 def change_password():
     form = ChangePasswordForm()
-    email = request.form.get('email')
 
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()

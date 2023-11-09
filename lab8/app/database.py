@@ -36,8 +36,5 @@ class User(db.Model, UserMixin):
 
     def __repr__(self):
         return f"User('{self.username}', '{self.email}', '{self.password}')"
-    
-with app.app_context():
-    db.create_all()
 
 migrate = Migrate(app, db)

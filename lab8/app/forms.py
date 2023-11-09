@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, FileField
 from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo, ValidationError
+from app import bcrypt
 from .database import User
 
 class LoginForm(FlaskForm):
@@ -13,6 +14,7 @@ class LoginForm(FlaskForm):
     submit = SubmitField("Увійти")
 
 class ChangePasswordForm(FlaskForm):
+    email = StringField("Електронна пошта", validators=[DataRequired("Це поле обовʼязкове"), Email()])
     password = PasswordField("Новий пароль", validators=[
                             DataRequired("Пароль повинен мати від 6 символів"),
                             Length(min=6)
@@ -21,7 +23,7 @@ class ChangePasswordForm(FlaskForm):
                             DataRequired("Пароль повинен мати від 6 символів"),
                             Length(min=6)
                         ])
-    submit = SubmitField("Увійти")
+    submit = SubmitField("Змінити")
 
 class RegisterForm(FlaskForm):
     username = StringField("Імʼя", validators=[DataRequired(message="Імʼя повинен містити від 4 до 20 символів"), Length(min=4, max=20),

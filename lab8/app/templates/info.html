@@ -141,6 +141,9 @@
                 {% from "_render_field.html" import render_field %}
                 {{ form.csrf_token }}
                 <div class="form-floating mb-3">
+                    {{ render_field(form.email) }}
+                </div>
+                <div class="form-floating mb-3">
                     {{ render_field(form.password) }}
                 </div>
                 <div class="form-floating mb-3">

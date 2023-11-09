@@ -1,8 +1,7 @@
 from flask import Flask, flash, render_template, request, redirect, url_for, send_file, make_response, session
-from flask_bcrypt import bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
 
-from app import app
+from app import app, bcrypt
 from app.forms import LoginForm, ChangePasswordForm, CreateTodoForm, RegisterForm
 from app.database import db, Todo, User
 
@@ -182,33 +181,30 @@ def remove_all_cookies():
 @app.route('/change_password', methods=['POST'])
 def change_password():
     form = ChangePasswordForm()
+    email = request.form.get('email')
 
     if form.validate_on_submit():
-        new_password = form.password.data
-        confirm_new_password = form.confirm_password.data
-        if new_password != '':
-            if new_password == confirm_new_password:
-                session['password'] = new_password
+        user = User.query.filter_by(email=form.email.data).first()
 
-                filename = os.path.join(app.static_folder, 'data', 'auth.json')
-                with open(filename) as auth_file:
-                    data = json.load(auth_file)
+        if user:
+            new_password = form.password.data
+            confirm_new_password = form.confirm_password.data
 
-                new_admin_data = {
-                    'name': data['name'],
-                    'password': new_password
-                }
+            if user:
+                if new_password == confirm_new_password:
+                    hashed_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
+                    user.password = hashed_password
+                    db.session.commit()
 
-                new_passwd_json = json.dumps(new_admin_data, indent=2)
+                    flash("Пароль успішно змінено", category=("success"))
+                    return redirect(url_for('info'))
+                else:
+                    flash("Паролі не збігаються", category="danger")
+        else:
+            flash("Користувача з такою поштою не існує", category="danger")
 
-                with open(filename, "w") as outfile:
-                    outfile.write(new_passwd_json)
-
-                flash("Пароль успішно змінено", category=("success"))
-                return redirect(url_for('info'))
-
-            flash("Ви не змінили пароль", category=("danger"))
-            return redirect(url_for('info'))
+        flash("Ви не змінили пароль", category=("danger"))
+        return redirect(url_for('info'))
 
     flash("Ви не набрали пароль. Спробуйте ще раз", category=("danger"))
     return redirect(url_for('info'))

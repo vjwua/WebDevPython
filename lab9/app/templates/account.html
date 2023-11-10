@@ -6,6 +6,7 @@
 {% block body %}
 <header class="masthead bg-primary text-white text-center">
     <div class="container d-flex align-items-center flex-column">
+        <img class="rounded-circle account-img" src={{url_for('static', filename='profile_pics/' + current_user.image_file)}}>
         <h1>Ласкаво просимо, {{ current_user.username }}!</h1>
         <h3>Надіюсь, вам тут буде затишно</h3>
         <h3>(ваш унікальний id - {{ userId }})</h3>

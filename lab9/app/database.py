@@ -25,11 +25,11 @@ class User(db.Model, UserMixin):
     image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     password = db.Column(db.String(60), nullable=False)
 
-    def __init__(self, username, email, image_file, password):
+    def __init__(self, username, email, password, image_file='default.jpg'):
         self.username = username
         self.email = email
-        self.image_file = image_file
         self.password = bcrypt.generate_password_hash(password).decode('utf-8')
+        self.image_file = image_file
 
     def validate_password(self, form_password):
         return bcrypt.check_password_hash(self.password, form_password)

@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, FileField
 from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo, ValidationError
+from flask_login import current_user
 from app import bcrypt
 from .database import User
 
@@ -46,6 +47,24 @@ class RegisterForm(FlaskForm):
     def validate_username(self, field):
         if User.query.filter_by(username=field.data).first():
             raise ValidationError('Це імʼя уже використовується.')
+
+class UpdateAccountForm(FlaskForm):
+    username = StringField("Імʼя", validators=[DataRequired(message="Імʼя повинен містити від 4 до 20 символів"), Length(min=4, max=20),
+    Regexp('^[A-Za-z][A-Za-z0-9_.]*$', message='Імʼя має містити букви, цифри, крапку та нижнє підкреслення')])
+
+    email = StringField("Електронна пошта", validators=[DataRequired(message="Це поле обовʼязкове"), Email()])
+
+    submit = SubmitField("Оновити")
+
+    def validate_email(self, field):
+        if field.data != current_user.email:
+            if User.query.filter_by(email=field.data).first():
+                raise ValidationError('The user with such email has been already registered.')
+        
+    def validate_username(self, field):
+        if field.data != current_user.username:
+            if User.query.filter_by(username=field.data).first():
+                raise ValidationError('Це імʼя уже використовується.')
 
 class CreateTodoForm(FlaskForm):
     new_task = StringField("Задача", validators=[DataRequired("Це поле обовʼязкове"), Length(min=1, max=100)])

@@ -2,7 +2,7 @@ from flask import Flask, flash, render_template, request, redirect, url_for, sen
 from flask_login import login_user, current_user, logout_user, login_required
 
 from app import app, bcrypt
-from app.forms import LoginForm, ChangePasswordForm, CreateTodoForm, RegisterForm
+from app.forms import LoginForm, ChangePasswordForm, CreateTodoForm, RegisterForm, UpdateAccountForm
 from app.database import db, Todo, User
 
 from datetime import datetime
@@ -117,7 +117,8 @@ def logout():
 @app.route("/account")
 @login_required
 def account():
-    return render_template('account.html')
+    form = UpdateAccountForm()  
+    return render_template('account.html', form=form)
 
 @app.route('/skills/')
 @app.route('/skills/<int:id>')

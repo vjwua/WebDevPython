@@ -119,10 +119,14 @@ def logout():
 def account():
     form = UpdateAccountForm()
     if form.validate_on_submit():
-        current_user.username = form.username.data
-        current_user.email = form.email.data
-        db.session.commit()
-        flash("Аккаунт оновлено", category=("success"))
+        if form.validate_username(form.username) and \
+            form.validate_email(form.email):
+            current_user.username = form.username.data
+            current_user.email = form.email.data
+            db.session.commit()
+            flash("Аккаунт оновлено", category=("success"))
+        else:
+            flash("Пошта або імʼя вже використовуються. Введіть інше значення", category=("warning"))
         return redirect(url_for('account'))
     elif request.method == 'GET':
         form.username.data = current_user.username

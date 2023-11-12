@@ -101,9 +101,8 @@ def users():
 @login_required
 def info():
     cookies = request.cookies
-    form = ChangePasswordForm()
 
-    return render_template('info.html', cookies=cookies, form=form)
+    return render_template('info.html', cookies=cookies)
 
 @app.route('/logout')
 def logout():
@@ -114,6 +113,8 @@ def logout():
 @login_required
 def account():
     form = UpdateAccountForm()
+    cp_form = ChangePasswordForm()
+
     if form.validate_on_submit():
         current_user.username = form.username.data
         current_user.email = form.email.data
@@ -132,7 +133,7 @@ def account():
         form.email.data = current_user.email
         form.about_me.data = current_user.about_me
 
-    return render_template('account.html', form=form)
+    return render_template('account.html', form=form, cp_form=cp_form)
 
 def save_picture(form_picture):
     random_hex = secrets.token_hex(8)
@@ -213,14 +214,14 @@ def remove_all_cookies():
 
 @app.route('/change_password', methods=['POST'])
 def change_password():
-    form = ChangePasswordForm()
+    cp_form = ChangePasswordForm()
 
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
+    if cp_form.validate_on_submit():
+        user = User.query.filter_by(email=cp_form.email.data).first()
 
         if user:
-            new_password = form.password.data
-            confirm_new_password = form.confirm_password.data
+            new_password = cp_form.password.data
+            confirm_new_password = cp_form.confirm_password.data
 
             if user:
                 if new_password == confirm_new_password:
@@ -229,33 +230,33 @@ def change_password():
                     db.session.commit()
 
                     flash("Пароль успішно змінено", category=("success"))
-                    return redirect(url_for('info'))
+                    return redirect(url_for('account'))
                 else:
                     flash("Паролі не збігаються", category="danger")
         else:
             flash("Користувача з такою поштою не існує", category="danger")
 
         flash("Ви не змінили пароль", category=("danger"))
-        return redirect(url_for('info'))
+        return redirect(url_for('account'))
 
     flash("Ви не набрали пароль. Спробуйте ще раз", category=("danger"))
-    return redirect(url_for('info'))
+    return redirect(url_for('account'))
 
 @app.route("/todo")
 @login_required
 def todo():
-    todo_form = CreateTodoForm()
+    form = CreateTodoForm()
     todo_list = db.session.query(Todo).all()
 
-    return render_template('todo.html', todo_form=todo_form, todo_list=todo_list)
+    return render_template('todo.html', form=form, todo_list=todo_list)
 
 @app.route("/create_todo", methods=['POST'])
 def create_todo():
-    todo_form = CreateTodoForm()
+    form = CreateTodoForm()
 
-    if todo_form.validate_on_submit():
-        new_task = todo_form.new_task.data
-        description = todo_form.description.data
+    if form.validate_on_submit():
+        new_task = form.new_task.data
+        description = form.description.data
         new_todo = Todo(title=new_task, description=description, complete=False)
         db.session.add(new_todo)
         db.session.commit()

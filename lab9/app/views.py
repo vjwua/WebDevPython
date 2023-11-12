@@ -9,6 +9,8 @@ from datetime import datetime
 import os
 import random
 import email_validator
+import secrets
+from PIL import Image
 
 my_skills = ["C++", "HTML & CSS", "MySQL", "JavaScript", "Java", "Python", "OpenGL", "Paint.net"]
 
@@ -119,19 +121,28 @@ def logout():
 def account():
     form = UpdateAccountForm()
     if form.validate_on_submit():
-        if form.validate_username(form.username) and \
-            form.validate_email(form.email):
-            current_user.username = form.username.data
-            current_user.email = form.email.data
-            db.session.commit()
-            flash("Аккаунт оновлено", category=("success"))
-        else:
-            flash("Пошта або імʼя вже використовуються. Введіть інше значення", category=("warning"))
+        current_user.username = form.username.data
+        current_user.email = form.email.data
+
+        if form.picture.data:
+            picture_file = save_picture(form.picture.data)
+            current_user.image_file = picture_file
+
+        db.session.commit()
+        flash("Аккаунт оновлено", category=("success"))
         return redirect(url_for('account'))
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.email.data = current_user.email
     return render_template('account.html', form=form)
+
+def save_picture(form_picture):
+    random_hex = secrets.token_hex(8)
+    _, f_ext = os.path.splitext(form_picture.filename)
+    picture_fn = random_hex + f_ext
+    picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_fn)
+    form_picture.save(picture_path)
+    return picture_fn
 
 @app.route('/skills/')
 @app.route('/skills/<int:id>')

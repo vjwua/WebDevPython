@@ -23,7 +23,7 @@ class ChangePasswordForm(FlaskForm):
                         ])
     confirm_password = PasswordField("Підтвердити новий пароль", validators=[
                             DataRequired("Пароль повинен мати від 6 символів"),
-                            Length(min=6)
+                            Length(min=6), EqualTo('password')
                         ])
     submit = SubmitField("Змінити")
 
@@ -62,7 +62,7 @@ class UpdateAccountForm(FlaskForm):
     def validate_email(self, field):
         if field.data != current_user.email:
             if User.query.filter_by(email=field.data).first():
-                raise ValidationError('The user with such email has been already registered.')
+                raise ValidationError('Ця пошта уже використовується.')
         
     def validate_username(self, field):
         if field.data != current_user.username:

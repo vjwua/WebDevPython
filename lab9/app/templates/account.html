@@ -6,7 +6,7 @@
 {% block body %}
 <header class="masthead bg-primary text-white text-center">
     <div class="container d-flex align-items-center flex-column">
-        <img class="rounded-circle account-img" src={{url_for('static', filename='profile_pics/' + current_user.image_file)}}>
+        <img class="img-thumbnail rounded-circle account-img" width="200" height="200" src={{url_for('static', filename='profile_pics/' + current_user.image_file)}}>
         <h1>Ласкаво просимо, {{ current_user.username }}!</h1>
         <h3>Надіюсь, вам тут буде затишно</h3>
         <h3>(ваш унікальний id - {{ userId }})</h3>
@@ -21,6 +21,8 @@
 </header>
 <section class="page-section" id="update_account_data">
     <div class="container">
+        <!-- Contact Section Heading-->
+        <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Оновлення профілю</h2>
         <!-- Icon Divider-->
         <div class="divider-custom">
             <div class="divider-custom-line"></div>
@@ -30,17 +32,20 @@
         <!-- Contact Section Form-->
         <div class="row justify-content-center">
             <div class="col-lg-8 col-xl-7">
-                <form id="contactForm" action={{url_for("account")}} method="POST" novalidate>
+                <form id="contactForm" action={{url_for("account")}} method="POST" novalidate enctype="multipart/form-data">
                     {% from "_render_field.html" import render_field %}
-                    {{form.csrf_token}}
+                    {{form.hidden_tag()}}
                     <div class="form-floating mb-3">
                         {{ render_field(form.username)}}
                     </div>
                     <div class="form-floating mb-3">
                         {{ render_field(form.email)}}
                     </div>
+                    <div class="form-floating mb-3">
+                        {{ render_field(form.picture)}}
+                    </div>
                     {{form.submit(class_='btn btn-primary btn-xl')}}
-                </form>
+                </form>                
             </div>
         </div>
     </div>

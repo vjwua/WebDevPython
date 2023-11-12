@@ -105,7 +105,9 @@
                     {% set non_session_cookies = {} %}
                     {% for key, value in cookies.items() %}
                         {% if key != 'session' %}
-                            {% set _ = non_session_cookies.update({key: value}) %}
+                            {% if key != 'remember_token' %}
+                                {% set _ = non_session_cookies.update({key: value}) %}
+                            {% endif %}
                         {% endif %}
                     {% endfor %}
 

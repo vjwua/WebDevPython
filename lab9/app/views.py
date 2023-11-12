@@ -79,10 +79,6 @@ def login():
 
         if user and user.validate_password(form_password) and user.email == form.email.data:
             if form_remember:
-                user_id = random.randint(1, 10000)
-                session['userId'] = user_id
-                session['email'] = form_email
-                session['password'] = form_password
                 login_user(user, remember=form.remember.data)
                 flash("Вхід виконано", category=("success"))
                 return redirect(url_for('account'))
@@ -111,8 +107,6 @@ def info():
 
 @app.route('/logout')
 def logout():
-    session.pop('userId')
-    session.pop('password')
     logout_user()
     return redirect(url_for("login"))
 

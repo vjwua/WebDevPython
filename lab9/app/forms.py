@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, FileField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, FileField, TextAreaField
 from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo, ValidationError
 from flask_login import current_user
 from app import bcrypt
@@ -56,6 +56,8 @@ class UpdateAccountForm(FlaskForm):
     email = StringField("Електронна пошта", validators=[DataRequired(message="Це поле обовʼязкове"), Email()])
 
     picture = FileField("Оновити аватар", validators=[FileAllowed(['jpg', 'png'])])
+
+    about_me = TextAreaField("Опишіть себе", validators=[Length(max=140)])
 
     submit = SubmitField("Оновити")
 

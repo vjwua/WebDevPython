@@ -9,8 +9,13 @@
         <img class="img-thumbnail rounded-circle account-img" width="200" height="200" src={{url_for('static', filename='profile_pics/' + current_user.image_file)}}>
         <h1>Ласкаво просимо, {{ current_user.username }}!</h1>
         <h3>Надіюсь, вам тут буде затишно</h3>
-        <h3>(ваш унікальний id - {{ userId }})</h3>
-
+        {% if current_user.about_me %}
+            <h4>Про мене:</h4>
+            <p>{{ current_user.about_me }}</p>
+        {% endif %}
+        {% if current_user.last_seen %}
+            <p>Last Seen: {{ current_user.last_seen }}</p>
+        {% endif %}
         <form id="logoutButton" action={{ url_for('info') }}>
             <input class="btn btn-primary btn-xl" type="submit" value="Перейти до info" />
         </form>
@@ -40,6 +45,9 @@
                     </div>
                     <div class="form-floating mb-3">
                         {{ render_field(form.email)}}
+                    </div>
+                    <div class="form-floating mb-3">
+                        {{ render_field(form.about_me)}}
                     </div>
                     <div class="form-floating mb-3">
                         {{ render_field(form.picture)}}

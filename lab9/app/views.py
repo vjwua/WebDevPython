@@ -123,6 +123,7 @@ def account():
     if form.validate_on_submit():
         current_user.username = form.username.data
         current_user.email = form.email.data
+        current_user.about_me = form.about_me.data
 
         if form.picture.data:
             picture_file = save_picture(form.picture.data)
@@ -131,9 +132,12 @@ def account():
         db.session.commit()
         flash("Аккаунт оновлено", category=("success"))
         return redirect(url_for('account'))
+    
     elif request.method == 'GET':
         form.username.data = current_user.username
         form.email.data = current_user.email
+        form.about_me.data = current_user.about_me
+
     return render_template('account.html', form=form)
 
 def save_picture(form_picture):
@@ -143,6 +147,16 @@ def save_picture(form_picture):
     picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_fn)
     form_picture.save(picture_path)
     return picture_fn
+
+@app.after_request
+def after_request(response):
+    if current_user.is_authenticated:
+        current_user.last_seen = datetime.now()
+        try:
+            db.session.commit()
+        except:
+            flash("Помилка при оновленні last_seen", category=("danger"))
+    return response
 
 @app.route('/skills/')
 @app.route('/skills/<int:id>')

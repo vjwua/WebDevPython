@@ -46,7 +46,7 @@ def hobbies():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('info'))
+        return redirect(url_for('account'))
     
     form = RegisterForm()
 
@@ -56,6 +56,7 @@ def register():
         password = form.password.data
         confirm_password = form.confirm_password.data
         image_file = form.image_file.data
+
         if password == confirm_password:
             new_user = User(username=username, email=email, password=password, image_file=image_file)
             db.session.add(new_user)
@@ -67,18 +68,14 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('info'))
+        return redirect(url_for('account'))
     
     form = LoginForm()
 
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-        form_email = form.email.data
-        form_password = form.password.data
-        form_remember = form.remember.data
-
-        if user and user.validate_password(form_password) and user.email == form.email.data:
-            if form_remember:
+        if user and user.validate_password(form.password.data):
+            if form.remember.data:
                 login_user(user, remember=form.remember.data)
                 flash("Вхід виконано", category=("success"))
                 return redirect(url_for('account'))
@@ -121,8 +118,7 @@ def account():
         current_user.about_me = form.about_me.data
 
         if form.picture.data:
-            picture_file = save_picture(form.picture.data)
-            current_user.image_file = picture_file
+            current_user.image_file = save_picture(form.picture.data)
 
         db.session.commit()
         flash("Аккаунт оновлено", category=("success"))

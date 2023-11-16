@@ -2,6 +2,7 @@ alembic==1.12.1
 bcrypt==4.0.1
 blinker==1.6.3
 click==8.1.7
+config==0.5.1
 dnspython==2.4.2
 email-validator==2.1.0.post1
 Flask==3.0.0

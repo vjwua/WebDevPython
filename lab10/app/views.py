@@ -161,53 +161,6 @@ def skills(id=None):
     else:
         return render_template('skills.html', skills=my_skills, total_skills=len(my_skills))
 
-def set_cookie(key, value, max_age):
-    response = make_response(redirect('info'))
-    response.set_cookie(key, value, max_age=max_age)
-    return response
-
-def delete_cookie(key):
-    response = make_response(redirect('info'))
-    response.delete_cookie(key)
-    return response
-
-@app.route('/add_cookie', methods=['POST'])
-def add_cookie():
-    key = request.form.get('key')
-    value = request.form.get('value')
-    max_age = int(request.form.get('max_age'))
-
-    flash("Кукі додано", category=("success"))
-    return set_cookie(key, value, max_age)
-
-@app.route('/remove_cookie/', methods=['GET'])
-@app.route('/remove_cookie/<key>', methods=['GET'])
-def remove_cookie():
-
-    key = request.args.get('key')
-
-    if key:
-        flash("Кукі видалено", category=("dark"))
-        response = make_response(redirect(url_for('info')))
-        response.delete_cookie(key)
-        return response
-    else:
-        flash("Виникла помилка. Повідомте про ключ нам", category=("info"))
-        response = make_response(redirect(url_for('info')))
-        return response
-
-@app.route('/remove_all_cookies', methods=['GET'])
-def remove_all_cookies():
-    flash("Усі кукі видалено", category=("danger"))
-    response = make_response(redirect(url_for('info')))
-    cookies = request.cookies
-
-    for key in cookies.keys():
-        if key != 'session':
-            response.delete_cookie(key)
-
-    return response
-
 @app.route('/change_password', methods=['POST'])
 def change_password():
     cp_form = ChangePasswordForm()

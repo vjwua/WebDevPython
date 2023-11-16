@@ -24,3 +24,6 @@ from app import database
 
 from .todo import todo_blueprint
 app.register_blueprint(todo_blueprint, url_prefix='/todo')
+
+from .cookies import cookies_blueprint
+app.register_blueprint(cookies_blueprint, url_prefix='/cookies')

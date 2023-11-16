@@ -50,4 +50,4 @@ def delete_todo(todo_id=None):
     db.session.delete(todo)
     db.session.commit()
     flash("Видалення виконано", category=("success"))
-    return redirect(url_for("todo.todo"))
+    return redirect(url_for("todo_bp.todo"))

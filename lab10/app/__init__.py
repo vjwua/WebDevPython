@@ -19,13 +19,14 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'warning'
 
-from app import views
-
 from .home import home_blueprint
 app.register_blueprint(home_blueprint, url_prefix='/')
 
 from .auth import auth_blueprint
 app.register_blueprint(auth_blueprint, url_prefix='/auth')
+
+from .account import account_blueprint
+app.register_blueprint(account_blueprint, url_prefix='/account')
 
 from .todo import todo_blueprint
 app.register_blueprint(todo_blueprint, url_prefix='/todo')

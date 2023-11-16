@@ -1,13 +1,14 @@
-from flask import Flask, flash, render_template, request, redirect, url_for, send_file, make_response, session
-from flask_login import login_user, current_user, logout_user, login_required
+from flask import flash, render_template, request, redirect, url_for
+from flask_login import current_user, login_required
 
 from app import app, bcrypt
-from app.forms import ChangePasswordForm, UpdateAccountForm
+from .forms import ChangePasswordForm, UpdateAccountForm
 from app.auth.models import db, User
+
+from . import account_blueprint
 
 from datetime import datetime
 import os
-import random
 import email_validator
 import secrets
 from PIL import Image
@@ -18,19 +19,19 @@ def get_user_info():
     current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     return user_os, user_agent, current_time
 
-@app.route('/base')
+@account_blueprint.route('/base')
 def index():
     user_os, user_agent, current_time = get_user_info()
     return render_template('base.html', user_os=user_os, user_agent=user_agent, current_time=current_time)
 
-@app.route('/info', methods=['GET'])
+@account_blueprint.route('/info', methods=['GET'])
 @login_required
 def info():
     cookies = request.cookies
 
     return render_template('info.html', cookies=cookies)
 
-@app.route("/account", methods=['GET', 'POST'])
+@account_blueprint.route("/account", methods=['GET', 'POST'])
 @login_required
 def account():
     form = UpdateAccountForm()
@@ -46,7 +47,7 @@ def account():
 
         db.session.commit()
         flash("Аккаунт оновлено", category=("success"))
-        return redirect(url_for('account'))
+        return redirect(url_for('account_bp.account'))
     
     elif request.method == 'GET':
         form.username.data = current_user.username
@@ -73,7 +74,7 @@ def after_request(response):
             flash("Помилка при оновленні last_seen", category=("danger"))
     return response
 
-@app.route('/change_password', methods=['POST'])
+@account_blueprint.route('/change_password', methods=['POST'])
 def change_password():
     cp_form = ChangePasswordForm()
 
@@ -91,14 +92,14 @@ def change_password():
                     db.session.commit()
 
                     flash("Пароль успішно змінено", category=("success"))
-                    return redirect(url_for('account'))
+                    return redirect(url_for('account_bp.account'))
                 else:
                     flash("Паролі не збігаються", category="danger")
         else:
             flash("Користувача з такою поштою не існує", category="danger")
 
         flash("Ви не змінили пароль", category=("danger"))
-        return redirect(url_for('account'))
+        return redirect(url_for('account_bp.account'))
 
     flash("Ви не набрали пароль. Спробуйте ще раз", category=("danger"))
-    return redirect(url_for('account'))
+    return redirect(url_for('account_bp.account'))

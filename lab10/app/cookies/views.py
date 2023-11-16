@@ -3,12 +3,12 @@ from flask import flash, request, redirect, url_for, make_response
 from . import cookies_blueprint
 
 def set_cookie(key, value, max_age):
-    response = make_response(redirect(url_for('info')))
+    response = make_response(redirect(url_for('account_bp.info')))
     response.set_cookie(key, value, max_age=max_age)
     return response
 
 def delete_cookie(key):
-    response = make_response(redirect(url_for('info')))
+    response = make_response(redirect(url_for('account_bp.info')))
     response.delete_cookie(key)
     return response
 
@@ -29,18 +29,18 @@ def remove_cookie():
 
     if key:
         flash("Кукі видалено", category=("dark"))
-        response = make_response(redirect(url_for('info')))
+        response = make_response(redirect(url_for('account_bp.info')))
         response.delete_cookie(key)
         return response
     else:
         flash("Виникла помилка. Повідомте про ключ нам", category=("info"))
-        response = make_response(redirect(url_for('info')))
+        response = make_response(redirect(url_for('account_bp.info')))
         return response
 
 @cookies_blueprint.route('/remove_all_cookies', methods=['GET'])
 def remove_all_cookies():
     flash("Усі кукі видалено", category=("danger"))
-    response = make_response(redirect(url_for('info')))
+    response = make_response(redirect(url_for('account_bp.info')))
     cookies = request.cookies
 
     for key in cookies.keys():

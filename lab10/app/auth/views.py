@@ -9,7 +9,7 @@ from . import auth_blueprint
 @auth_blueprint.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('account'))
+        return redirect(url_for('account_bp.account'))
     
     form = RegisterForm()
 
@@ -31,7 +31,7 @@ def register():
 @auth_blueprint.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('account'))
+        return redirect(url_for('account_bp.account'))
     
     form = LoginForm()
 
@@ -41,7 +41,7 @@ def login():
             if form.remember.data:
                 login_user(user, remember=form.remember.data)
                 flash("Вхід виконано", category=("success"))
-                return redirect(url_for('account'))
+                return redirect(url_for('account_bp.account'))
             else:
                 flash("Ви не запамʼятали себе, введіть дані ще раз", category=("warning"))
                 return redirect(url_for('home_bp.home'))

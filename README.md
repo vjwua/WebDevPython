@@ -1,5 +1,8 @@
 # WebDevPython
 Laboratory works from WebDev (3rd year)
+Number 10 (Blueprint, Factory)
+![Screenshot](./lab10/screenshots/lab10_img_1.png)
+
 Number 9 (Account, images, change password)
 
 ![Screenshot](./lab9/screenshots/lab9_img_1.png)

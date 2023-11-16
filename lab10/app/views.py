@@ -2,8 +2,8 @@ from flask import Flask, flash, render_template, request, redirect, url_for, sen
 from flask_login import login_user, current_user, logout_user, login_required
 
 from app import app, bcrypt
-from app.forms import LoginForm, ChangePasswordForm, RegisterForm, UpdateAccountForm
-from app.database import db, User
+from app.forms import ChangePasswordForm, UpdateAccountForm
+from app.auth.models import db, User
 
 from datetime import datetime
 import os
@@ -23,68 +23,12 @@ def index():
     user_os, user_agent, current_time = get_user_info()
     return render_template('base.html', user_os=user_os, user_agent=user_agent, current_time=current_time)
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if current_user.is_authenticated:
-        return redirect(url_for('account'))
-    
-    form = RegisterForm()
-
-    if form.validate_on_submit():
-        username = form.username.data
-        email = form.email.data
-        password = form.password.data
-        confirm_password = form.confirm_password.data
-        image_file = form.image_file.data
-
-        if password == confirm_password:
-            new_user = User(username=username, email=email, password=password, image_file=image_file)
-            db.session.add(new_user)
-            db.session.commit()
-        flash("Аккаунт зареєстровано", category=("success"))
-        return redirect(url_for("login"))
-    return render_template("register.html", form=form)
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if current_user.is_authenticated:
-        return redirect(url_for('account'))
-    
-    form = LoginForm()
-
-    if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
-        if user and user.validate_password(form.password.data):
-            if form.remember.data:
-                login_user(user, remember=form.remember.data)
-                flash("Вхід виконано", category=("success"))
-                return redirect(url_for('account'))
-            else:
-                flash("Ви не запамʼятали себе, введіть дані ще раз", category=("warning"))
-                return redirect(url_for('home'))
-        else:
-            flash("Вхід не виконано", category=("warning"))
-            return redirect(url_for('login'))
-    
-    return render_template('login.html', form=form)
-
-@app.route('/users')
-@login_required
-def users():
-    all_users = User.query.all()
-    return render_template('users.html', all_users=all_users)
-
 @app.route('/info', methods=['GET'])
 @login_required
 def info():
     cookies = request.cookies
 
     return render_template('info.html', cookies=cookies)
-
-@app.route('/logout')
-def logout():
-    logout_user()
-    return redirect(url_for("login"))
 
 @app.route("/account", methods=['GET', 'POST'])
 @login_required

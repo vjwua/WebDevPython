@@ -14,10 +14,10 @@
         {% if current_user.last_seen %}
             <p>Last Seen: {{ current_user.last_seen }}</p>
         {% endif %}
-        <form id="logoutButton" action={{ url_for('info') }}>
+        <form id="logoutButton" action={{ url_for("info") }}>
             <input class="btn btn-primary btn-xl" type="submit" value="Перейти до info" />
         </form>
-        <form id="logoutButton" action={{ url_for('logout') }}>
+        <form id="logoutButton" action={{ url_for("auth_bp.logout") }}>
             <input class="btn btn-primary btn-xl" type="submit" value="Вийти" />
         </form>
     </div>

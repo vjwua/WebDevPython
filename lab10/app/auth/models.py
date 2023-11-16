@@ -1,13 +1,6 @@
 from app import db, bcrypt, login_manager
 from flask_login import UserMixin
-import os
 from datetime import datetime
-
-class Todo(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100))
-    description = db.Column(db.String(200))
-    complete = db.Column(db.Boolean)
 
 @login_manager.user_loader
 def user_loader(user_id):

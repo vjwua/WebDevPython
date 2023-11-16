@@ -158,7 +158,3 @@ def change_password():
 
     flash("Ви не набрали пароль. Спробуйте ще раз", category=("danger"))
     return redirect(url_for('account'))
-
-@app.route("/")
-def main():
-    return redirect(url_for("home_bp.home"))

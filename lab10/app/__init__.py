@@ -23,7 +23,7 @@ from app import views
 from app import database
 
 from .home import home_blueprint
-app.register_blueprint(home_blueprint, url_prefix='/home')
+app.register_blueprint(home_blueprint, url_prefix='/')
 
 from .todo import todo_blueprint
 app.register_blueprint(todo_blueprint, url_prefix='/todo')

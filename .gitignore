@@ -1,5 +1,4 @@
 */env
 */app/__pycache__
 */.vscode/settings.json
-*/migrations/versions/__pycache__/
-*/migrations/__pycache__/
+*/migrations/

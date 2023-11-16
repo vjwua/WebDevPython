@@ -12,8 +12,6 @@ import email_validator
 import secrets
 from PIL import Image
 
-my_skills = ["C++", "HTML & CSS", "MySQL", "JavaScript", "Java", "Python", "OpenGL", "Paint.net"]
-
 def get_user_info():
     user_os = os.name
     user_agent = request.headers.get('User-Agent')
@@ -24,24 +22,6 @@ def get_user_info():
 def index():
     user_os, user_agent, current_time = get_user_info()
     return render_template('base.html', user_os=user_os, user_agent=user_agent, current_time=current_time)
-
-@app.route('/home')
-@app.route('/')
-def home():
-    user_os, user_agent, current_time = get_user_info()
-    return render_template('home.html', user_os=user_os, user_agent=user_agent, current_time=current_time)
-
-@app.route('/cv')
-def cv():
-    return render_template('cv.html')
-
-@app.route('/edu')
-def edu():
-    return render_template('edu.html')
-
-@app.route('/hobbies')
-def hobbies():
-    return render_template('hobbies.html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -149,18 +129,6 @@ def after_request(response):
             flash("Помилка при оновленні last_seen", category=("danger"))
     return response
 
-@app.route('/skills/')
-@app.route('/skills/<int:id>')
-def skills(id=None):
-    if id is not None:
-        if 0 <= id < len(my_skills):
-            skill = my_skills[id]
-            return render_template('skills.html', skill=skill)
-        else:
-            return render_template('skills.html')
-    else:
-        return render_template('skills.html', skills=my_skills, total_skills=len(my_skills))
-
 @app.route('/change_password', methods=['POST'])
 def change_password():
     cp_form = ChangePasswordForm()
@@ -191,6 +159,6 @@ def change_password():
     flash("Ви не набрали пароль. Спробуйте ще раз", category=("danger"))
     return redirect(url_for('account'))
 
-@app.route("/main")
+@app.route("/")
 def main():
-    return redirect(url_for("home"))
+    return redirect(url_for("home_bp.home"))

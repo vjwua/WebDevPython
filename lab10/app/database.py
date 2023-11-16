@@ -1,13 +1,7 @@
-from app import app, bcrypt, login_manager
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
+from app import db, bcrypt, login_manager
 from flask_login import UserMixin
 import os
 from datetime import datetime
-
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL", "sqlite:///flaskdb.db")
-
-db = SQLAlchemy(app)
 
 class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -39,5 +33,3 @@ class User(db.Model, UserMixin):
 
     def __repr__(self):
         return f"User('{self.username}', '{self.email}', '{self.password}')"
-
-migrate = Migrate(app, db)

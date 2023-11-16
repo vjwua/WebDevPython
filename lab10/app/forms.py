@@ -70,8 +70,3 @@ class UpdateAccountForm(FlaskForm):
         if field.data != current_user.username:
             if User.query.filter_by(username=field.data).first():
                 raise ValidationError('Це імʼя уже використовується.')
-
-class CreateTodoForm(FlaskForm):
-    new_task = StringField("Задача", validators=[DataRequired("Це поле обовʼязкове"), Length(min=1, max=100)])
-    description = StringField("Опис", validators=[DataRequired("Це поле обовʼязкове"), Length(min=1, max=200)])
-    submit = SubmitField("Створити")

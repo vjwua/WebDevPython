@@ -3,7 +3,7 @@
 <dt>{{ field.label() }}</dt>
 
 {% if field.errors %}
-<dd>{{ field(style="background-color: #dc3545;", **kwargs) | safe }}</dd>
+<dd>{{ field(style="background-color: #dc3545;", class="form-control", **kwargs) | safe }}</dd>
     <ul>
         {% for error in field.errors %}
             <li class="list-group-item list-group-item-danger"> {{error}} </li>

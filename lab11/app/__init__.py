@@ -29,4 +29,7 @@ def create_app(config_name = 'default'):
         from .cookies import cookies_blueprint
         app.register_blueprint(cookies_blueprint, url_prefix='/cookies')
 
+        from .post import post_blueprint
+        app.register_blueprint(post_blueprint, url_prefix='/post')
+
         return app

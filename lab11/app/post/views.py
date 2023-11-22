@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 
 from app import app
 from . import post_blueprint
-from .models import db, Post
+from .models import db, Post, Category
 from .forms import CreatePostForm
 
 import os
@@ -42,6 +42,7 @@ def create():
         flash("Створення виконано", category=("success"))
         return redirect(url_for("post_bp.view_post"))
     
+    form.category.choices = [(category.id, category.name) for category in Category.query.all()]
     return render_template('create_post.html', form=form)
 
 @post_blueprint.route("/update/<int:id>", methods=['GET', 'POST'])

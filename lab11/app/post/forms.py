@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, TextAreaField, SelectField, SubmitField
+from wtforms import StringField, TextAreaField, SelectField, SubmitField, BooleanField
 from wtforms.validators import Length, InputRequired
 
 class CreatePostForm(FlaskForm):
@@ -8,4 +8,6 @@ class CreatePostForm(FlaskForm):
     text = TextAreaField('Текст', validators=[Length(max=500)])
     picture = FileField('Зображення', validators=[FileAllowed(['jpg', 'png'])])
     type = SelectField('Тип', choices=[('News', 'News'), ('Publication', 'Publication'), ('Other', 'Other')])
+    enabled = BooleanField('Enabled',)
+    category = SelectField(u'Категорія', coerce=int)
     submit = SubmitField('Створити')

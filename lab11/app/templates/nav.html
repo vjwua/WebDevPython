@@ -5,6 +5,9 @@
     "Навички": url_for("home_bp.skills"),
 } %}
 
+{% block extra_scripts %}
+{% endblock %}
+
 <nav class="navbar navbar-expand-lg bg-secondary text-uppercase" id="mainNav">
     <div class="container">
         <a class="navbar-brand" href="{{url_for("home_bp.home")}}">Моя сторінка</a>
@@ -19,9 +22,17 @@
                 {% endfor %}
 
                 {% if current_user.is_authenticated %}
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href={{ url_for('todo_bp.todo') }}> БД Todo </a></li>
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href={{ url_for('auth_bp.users') }}> БД User </a></li>
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href={{ url_for('account_bp.account') }}> Профіль </a></li>
+                    <div class="btn-group">
+                        <button class="btn btn-secondary dropdown-toggle " type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            {{ current_user.username }}
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <a class="nav-link py-3 px-0 px-lg-3 rounded" href={{ url_for('account_bp.account') }}> Профіль </a>
+                            <a class="nav-link py-3 px-0 px-lg-3 rounded" href={{ url_for('todo_bp.todo') }}> БД Todo </a>
+                            <a class="nav-link py-3 px-0 px-lg-3 rounded" href={{ url_for('auth_bp.users') }}> БД User </a>
+                            <a class="nav-link py-3 px-0 px-lg-3 rounded" href={{ url_for('post_bp.view_post') }}> Пости </a>
+                        </div>
+                    </div>
                 {% else %} <!--userId != None-->
                     <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href={{ url_for('auth_bp.login') }}> Увійти </a></li>
                 {% endif %}

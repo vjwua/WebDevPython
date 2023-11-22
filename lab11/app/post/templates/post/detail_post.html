@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %} Пости {% endblock %}
+
+{% block body %}
+<section class="page-section">
+    <div class="container d-flex align-items-center flex-column">
+        <img class="img-thumbnail account-img" width="200" src={{url_for('post_bp.static', filename='images/' + pk.image_file)}}>
+        <h1>{{ pk.title }}</h1>
+        <h4>{{ pk.text }}</h4>
+        {% if current_user.id == pk.user_id %}
+        <div class="d-flex flex-row">
+            <a class="btn btn-success" href={{ url_for('post_bp.update', id=pk.id) }}>Оновити</a>
+            <a class="btn btn-danger" href={{ url_for('post_bp.delete', id=pk.id) }}>Видалити</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

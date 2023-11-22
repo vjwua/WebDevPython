@@ -16,14 +16,14 @@ def view_post():
     all_posts = Post.query.all()
     image_file = url_for('static', filename='images/')
 
-    return render_template('post.html', all_posts=all_posts, image_file=image_file)
+    return render_template('show_all_posts.html', all_posts=all_posts, image_file=image_file)
 
-@post_blueprint.route("/<int:user_id>", methods=['GET', 'POST'])
-def detail_post(user_id=None):
-    get_post = Post.query.get_or_404(user_id)
+@post_blueprint.route("/<int:id>", methods=['GET', 'POST'])
+def view_detail(id):
+    get_post = Post.query.get_or_404(id)
     return render_template('detail_post.html', pk=get_post)
 
-@post_blueprint.route("/create", methods=['POST'])
+@post_blueprint.route("/create", methods=['GET', 'POST'])
 @login_required
 def create():
     form = CreatePostForm()
@@ -33,24 +33,23 @@ def create():
             picture_file = save_picture(form.picture.data)
             image = picture_file
         else:
-            image = 'postdefault.jpg'
+            image = 'postdefault.png'
 
-        new_post = Post(title=form.title.data, text=form.text.data, type=form.type.data, image_file=image, post_id=current_user.id)
+        new_post = Post(title=form.title.data, text=form.text.data, type=form.type.data, image_file=image, user_id=current_user.id)
         
         db.session.add(new_post)
         db.session.commit()
         flash("Створення виконано", category=("success"))
-        return redirect(url_for("post.view_post"))
+        return redirect(url_for("post_bp.view_post"))
     
-    flash("Помилка при створенні", category=("danger"))
-    return redirect(url_for("post.view_post"))
+    return render_template('create_post.html', form=form)
 
-@post_blueprint.route("/update_todo/<int:user_id>")
-def update(user_id=None):
-    get_post = Post.query.get_or_404(user_id)
-    if current_user.id != get_post.post_id:
+@post_blueprint.route("/update/<int:id>", methods=['GET', 'POST'])
+def update(id):
+    get_post = Post.query.get_or_404(id)
+    if current_user.id != get_post.user_id:
         flash("Це не ваш пост", category=("warning"))
-        return redirect(url_for('post.view_detail', user_id=user_id))
+        return redirect(url_for('post_bp.view_detail', id=id))
     
     form = CreatePostForm()
 
@@ -66,31 +65,32 @@ def update(user_id=None):
         db.session.commit()
         db.session.add(get_post)
 
-        flash("Пост був доданий", category=("access"))
-        return redirect(url_for('post.view_detail', user_id=user_id))
+        flash("Пост був оновлений", category=("access"))
+        return redirect(url_for('post_bp.view_detail', id=id))
 
     form.title.data = get_post.title
     form.text.data = get_post.text
     form.type.data = get_post.type
 
-    return redirect(url_for("post.view_post"))
+    return render_template('update_post.html', form=form)
 
 def save_picture(form_picture):
     random_hex = secrets.token_hex(8)
     _, f_ext = os.path.splitext(form_picture.filename)
     picture_fn = random_hex + f_ext
-    picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_fn)
+    picture_path = os.path.join(app.root_path, 'post/static/post/images', picture_fn)
     form_picture.save(picture_path)
     return picture_fn
 
-@post_blueprint.route("/delete_todo/<int:user_id>")
-def delete(user_id=None):
-    get_post = Post.query.get_or_404(user_id)
+@post_blueprint.route("/delete/<int:id>", methods=['GET', 'POST'])
+def delete(id):
+    get_post = Post.query.get_or_404(id)
 
-    if current_user.id == get_post.post_id:
+    if current_user.id == get_post.user_id:
         db.session.delete(get_post)
         db.session.commit()
         flash("Видалення виконано", category=("success"))
+    else:
+        flash("Це не ваш пост", category=("warning"))
 
-    flash("Це не ваш пост", category=("warning"))
-    return redirect(url_for('post.view_detail', user_id=user_id))
+    return redirect(url_for('post_bp.view_post'))

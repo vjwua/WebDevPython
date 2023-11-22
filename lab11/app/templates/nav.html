@@ -28,9 +28,10 @@
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                             <a class="nav-link py-3 px-0 px-lg-3 rounded" href={{ url_for('account_bp.account') }}> Профіль </a>
-                            <a class="nav-link py-3 px-0 px-lg-3 rounded" href={{ url_for('todo_bp.todo') }}> БД Todo </a>
-                            <a class="nav-link py-3 px-0 px-lg-3 rounded" href={{ url_for('auth_bp.users') }}> БД User </a>
-                            <a class="nav-link py-3 px-0 px-lg-3 rounded" href={{ url_for('post_bp.view_post') }}> Пости </a>
+                            <a class="nav-link py-3 px-0 px-lg-3 rounded" href={{ url_for('post_bp.view_post') }}> Усі пости </a>
+                            <a class="nav-link py-3 px-0 px-lg-3 rounded" href={{ url_for('post_bp.create') }}> Створити пост </a>
+                            <a class="nav-link py-3 px-0 px-lg-3 rounded" href={{ url_for('todo_bp.todo') }}> Todo </a>
+                            <a class="nav-link py-3 px-0 px-lg-3 rounded" href={{ url_for('auth_bp.users') }}> Користувачі </a>
                         </div>
                     </div>
                 {% else %} <!--userId != None-->

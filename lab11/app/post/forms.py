@@ -11,3 +11,7 @@ class CreatePostForm(FlaskForm):
     enabled = BooleanField('Enabled',)
     category = SelectField(u'Категорія', coerce=int)
     submit = SubmitField('Створити')
+
+class CreateCategoryForm(FlaskForm):
+    name = StringField('Назва', validators=[InputRequired(), Length(min=2, max=100)])
+    submit = SubmitField('Створити')

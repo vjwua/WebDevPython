@@ -4,7 +4,7 @@ from flask_login import login_required, current_user
 from app import app
 from . import post_blueprint
 from .models import db, Post, Category
-from .forms import CreatePostForm
+from .forms import CreatePostForm, CreateCategoryForm
 
 import os
 import secrets
@@ -95,3 +95,49 @@ def delete(id):
         flash("Це не ваш пост", category=("warning"))
 
     return redirect(url_for('post_bp.view_post'))
+
+@post_blueprint.route("/category", methods=['GET', 'POST'])
+@login_required
+def view_category():
+    form = CreateCategoryForm()
+    list = Category.query.all()
+
+    return render_template('category.html', form=form, list=list)
+
+@post_blueprint.route("/create_category", methods=['GET', 'POST'])
+@login_required
+def create_category():
+    form = CreateCategoryForm()
+
+    if form.validate_on_submit():
+        new_category = Category(name=form.name.data)
+        db.session.add(new_category)
+        db.session.commit()
+        flash("Створення виконано", category=("success"))
+        return redirect(url_for("post_bp.view_category"))
+    
+    flash("Помилка при створенні", category=("danger"))
+    return redirect(url_for("post_bp.view_category"))
+
+@post_blueprint.route("/update_category/<int:category_id>")
+def update_category(category_id):
+    get_category = Category.query.get_or_404(category_id)
+    form = CreateCategoryForm()
+
+    if form.validate_on_submit():
+        get_category.name = form.name.data
+        db.session.add(get_category)
+        flash("Оновлення виконано", category=("success"))
+        return redirect(url_for("post_bp.view_category"))
+    
+    flash("Помилка при створенні", category=("danger"))
+    return redirect(url_for("post_bp.view_category"))
+
+@post_blueprint.route("/delete_category/<int:category_id>")
+def delete_category(category_id):
+    get_category = Category.query.get_or_404(category_id)
+
+    db.session.delete(get_category)
+    db.session.commit()
+    flash("Видалення виконано", category=("success"))
+    return redirect(url_for("post_bp.view_category"))

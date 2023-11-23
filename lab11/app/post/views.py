@@ -119,19 +119,20 @@ def create_category():
     flash("Помилка при створенні", category=("danger"))
     return redirect(url_for("post_bp.view_category"))
 
-@post_blueprint.route("/update_category/<int:category_id>")
+@post_blueprint.route("/update_category/<int:category_id>", methods=['GET', 'POST'])
 def update_category(category_id):
     get_category = Category.query.get_or_404(category_id)
     form = CreateCategoryForm()
 
     if form.validate_on_submit():
         get_category.name = form.name.data
+        db.session.commit()
         db.session.add(get_category)
         flash("Оновлення виконано", category=("success"))
         return redirect(url_for("post_bp.view_category"))
     
-    flash("Помилка при створенні", category=("danger"))
-    return redirect(url_for("post_bp.view_category"))
+    form.name.data = get_category.name
+    return render_template('update_category.html', form=form)
 
 @post_blueprint.route("/delete_category/<int:category_id>")
 def delete_category(category_id):

@@ -52,3 +52,26 @@ window.addEventListener('DOMContentLoaded', event => {
     });
 
 });
+
+document.getElementById('confirmDeleteButton').addEventListener('click', function() {
+    // Отримання ID поста
+    var postId = document.getElementById('confirmDeleteButton').getAttribute('data-post-id');
+    
+    // Відправка запиту на видалення поста
+    fetch('/delete/' + postId, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token() }}'
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            // Перенаправлення або оновлення сторінки після успішного видалення
+            window.location.href = '/';
+        } else {
+            console.error('Помилка видалення поста');
+        }
+    })
+    .catch(error => console.error('Помилка видалення поста:', error));
+});

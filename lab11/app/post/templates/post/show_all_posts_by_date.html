@@ -39,7 +39,7 @@
 
             {% for number in all_posts.iter_pages(left_edge = 3, right_edge = 3) %}
                 {% if all_posts.page != number %}
-                    <li class="page-item secondary"><a class="page-link" href={{url_for("post_bp.view_post_by_date", page = page) }}>{{ number }}</a></li>
+                    <li class="page-item secondary"><a class="page-link" href={{url_for("post_bp.view_post_by_date", page = number) }}>{{ number }}</a></li>
                 {% else %}
                     <li class="page-item active"><a class="page-link" href="#">{{ number }}</a></li>
                 {% endif %}

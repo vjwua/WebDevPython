@@ -1,4 +1,4 @@
-from flask import flash, render_template, redirect, url_for
+from flask import flash, render_template, redirect, request, url_for
 from flask_login import login_required, current_user
 from sqlalchemy import desc
 
@@ -22,7 +22,8 @@ def view_post():
 @post_blueprint.route("/alt", methods=['GET', 'POST'])
 @login_required
 def view_post_by_date():
-    all_posts = Post.query.order_by(desc(Post.created))
+    page_num = request.args.get('page', 1, type=int)
+    all_posts = Post.query.order_by(desc(Post.created)).paginate(page=page_num, per_page=3)
     image_file = url_for('static', filename='images/')
 
     return render_template('show_all_posts_by_date.html', all_posts=all_posts, image_file=image_file)

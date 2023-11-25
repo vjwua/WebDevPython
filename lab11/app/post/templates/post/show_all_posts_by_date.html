@@ -11,6 +11,8 @@
                     <tr class = "postTable">
                         <th class = "postTable">Світлина</th>
                         <th class = "postTable">Значення</th>
+                        <th class = "postTable">Категорія</th>
+                        <th class = "postTable">Час створення</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -18,6 +20,8 @@
                     <tr>
                         <th scope="row"><img src="{{url_for('post_bp.static', filename='images/' + post.image_file)}}" width="150px"></th>
                         <td class = "postTable"><a href="{{ url_for('post_bp.view_detail', id=post.id) }}">{{ post.title }}</a></td>
+                        <td class = "postTable">{{ post.category }}</td>
+                        <td class = "postTable">{{ post.created }}</td>
                     </tr>
                     {% else %}
                         <tr>
@@ -27,7 +31,7 @@
                 </tbody>
             </table>
             <br>
-            <h4 class="text-center"><a href={{url_for("post_bp.view_post_by_date")}}>Вивести пости за датою</a></h4>
+            <h4 class="text-center"><a href={{url_for("post_bp.view_post")}}>Повернутися до звичного вигляду</a></h4>
         </div>
     </div>
 </section>

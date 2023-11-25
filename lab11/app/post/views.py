@@ -1,5 +1,6 @@
 from flask import flash, render_template, redirect, url_for
 from flask_login import login_required, current_user
+from sqlalchemy import desc
 
 from app import app
 from . import post_blueprint
@@ -17,6 +18,14 @@ def view_post():
     image_file = url_for('static', filename='images/')
 
     return render_template('show_all_posts.html', all_posts=all_posts, image_file=image_file)
+
+@post_blueprint.route("/alt", methods=['GET', 'POST'])
+@login_required
+def view_post_by_date():
+    all_posts = Post.query.order_by(desc(Post.created))
+    image_file = url_for('static', filename='images/')
+
+    return render_template('show_all_posts_by_date.html', all_posts=all_posts, image_file=image_file)
 
 @post_blueprint.route("/<int:id>", methods=['GET', 'POST'])
 def view_detail(id):

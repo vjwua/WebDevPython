@@ -13,5 +13,5 @@ class CreatePostForm(FlaskForm):
     submit = SubmitField('Створити')
 
 class CreateCategoryForm(FlaskForm):
-    name = StringField('Назва', validators=[InputRequired(), Length(min=2, max=100)])
+    name = StringField('Назва', validators=[InputRequired(), Length(min=2, max=50)])
     submit = SubmitField('Створити')

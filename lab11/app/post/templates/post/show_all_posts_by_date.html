@@ -11,7 +11,7 @@
                     <tr class = "postTable">
                         <th class = "postTable">Світлина</th>
                         <th class = "postTable">Значення</th>
-                        <th class = "postTable">Категорія</th>
+                        <th class = "postTable">Тип</th>
                         <th class = "postTable">Час створення</th>
                     </tr>
                 </thead>
@@ -20,7 +20,7 @@
                     <tr>
                         <th scope="row"><img src="{{url_for('post_bp.static', filename='images/' + post.image_file)}}" width="150px"></th>
                         <td class = "postTable"><a href="{{ url_for('post_bp.view_detail', id=post.id) }}">{{ post.title }}</a></td>
-                        <td class = "postTable">{{ post.category }}</td>
+                        <td class = "postTable">{{ post.type.name }}</td>
                         <td class = "postTable">{{ post.created }}</td>
                     </tr>
                     {% else %}

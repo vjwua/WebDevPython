@@ -4,8 +4,8 @@ from sqlalchemy import desc
 
 from app import app
 from . import post_blueprint
-from .models import db, Post, Category
-from .forms import CreatePostForm, CreateCategoryForm
+from .models import db, Post, Category, Tag
+from .forms import CreatePostForm, CreateCategoryForm, CreateTagForm
 
 import os
 import secrets
@@ -31,12 +31,16 @@ def view_post_by_date():
 @post_blueprint.route("/<int:id>", methods=['GET', 'POST'])
 def view_detail(id):
     get_post = Post.query.get_or_404(id)
-    return render_template('detail_post.html', pk=get_post)
+    category = (Category.query.get_or_404(get_post.category_id)).name
+    tag = Tag.query.get_or_404().all()
+    return render_template('detail_post.html', pk=get_post, category=category, tag=tag)
 
 @post_blueprint.route("/create", methods=['GET', 'POST'])
 @login_required
 def create():
     form = CreatePostForm()
+    form.category.choices = [(category.id, category.name) for category in Category.query.all()]
+    form.tag.choices = [(tag.id, tag.name) for tag in Tag.query.all()]
 
     if form.validate_on_submit():
         if form.picture.data:
@@ -52,7 +56,6 @@ def create():
         flash("Створення виконано", category=("success"))
         return redirect(url_for("post_bp.view_post"))
     
-    form.category.choices = [(category.id, category.name) for category in Category.query.all()]
     return render_template('create_post.html', form=form)
 
 @post_blueprint.route("/update/<int:id>", methods=['GET', 'POST'])
@@ -63,6 +66,8 @@ def update(id):
         return redirect(url_for('post_bp.view_detail', id=id))
     
     form = CreatePostForm()
+    form.category.choices = [(category.id, category.name) for category in Category.query.all()]
+    form.tag.choices = [(tag.id, tag.name) for tag in Tag.query.all()]
 
     if form.validate_on_submit():
         if form.picture.data:
@@ -72,6 +77,8 @@ def update(id):
         get_post.title = form.title.data
         get_post.text = form.text.data
         get_post.type = form.type.data
+        get_post.category_id = form.category.data
+        #get_post.tag_id = form.tag.data
 
         db.session.commit()
         db.session.add(get_post)
@@ -82,6 +89,8 @@ def update(id):
     form.title.data = get_post.title
     form.text.data = get_post.text
     form.type.data = get_post.type
+    form.category.data = get_post.category_id
+    #form.tag.data = get_post.tag_id
 
     return render_template('update_post.html', form=form)
 
@@ -149,6 +158,53 @@ def delete_category(category_id):
     get_category = Category.query.get_or_404(category_id)
 
     db.session.delete(get_category)
+    db.session.commit()
+    flash("Видалення виконано", category=("success"))
+    return redirect(url_for("post_bp.view_category"))
+
+@post_blueprint.route("/tag", methods=['GET', 'POST'])
+@login_required
+def view_tag():
+    form = CreateTagForm()
+    list = Tag.query.all()
+
+    return render_template('tag.html', form=form, list=list)
+
+@post_blueprint.route("/create_tag", methods=['GET', 'POST'])
+@login_required
+def create_tag():
+    form = CreateTagForm()
+
+    if form.validate_on_submit():
+        new_tag = Tag(name=form.name.data)
+        db.session.add(new_tag)
+        db.session.commit()
+        flash("Створення виконано", category=("success"))
+        return redirect(url_for("post_bp.view_tag"))
+    
+    flash("Помилка при створенні", category=("danger"))
+    return redirect(url_for("post_bp.view_tag"))
+
+@post_blueprint.route("/update_tag/<int:tag_id>", methods=['GET', 'POST'])
+def update_tag(tag_id):
+    get_tag = Tag.query.get_or_404(tag_id)
+    form = CreateTagForm()
+
+    if form.validate_on_submit():
+        get_tag.name = form.name.data
+        db.session.commit()
+        db.session.add(get_tag)
+        flash("Оновлення виконано", category=("success"))
+        return redirect(url_for("post_bp.view_tag"))
+    
+    form.name.data = get_tag.name
+    return render_template('update_tag.html', form=form)
+
+@post_blueprint.route("/delete_tag/<int:tag_id>")
+def delete_tag(tag_id):
+    get_tag = Tag.query.get_or_404(tag_id)
+
+    db.session.delete(get_tag)
     db.session.commit()
     flash("Видалення виконано", category=("success"))
     return redirect(url_for("post_bp.view_category"))

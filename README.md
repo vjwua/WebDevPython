@@ -1,6 +1,10 @@
 # WebDevPython
 Laboratory works from WebDev (3rd year)
 Number 11 (Posts, 1-M, M-M, Pagination)
+![Screenshot](./lab11/screenshots/lab11_img_13.png)
+
+![Screenshot](./lab11/screenshots/lab11_img_15.png)
+
 ![Screenshot](./lab11/screenshots/lab11_img_2.png)
 
 ![Screenshot](./lab11/screenshots/lab11_img_3.png)

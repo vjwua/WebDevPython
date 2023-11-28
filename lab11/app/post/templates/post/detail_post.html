@@ -8,7 +8,7 @@
         <h1>{{ pk.title }}</h1>
         <h5>Тип - {{ pk.type.name }}, Категорія - {{ category }}</h5>
         {% if pk.tags|length != 0 %}
-        <h5>Теги :
+        <h5>Теги:
             {% for tag in pk.tags %}
                 #{{tag.name}}
             {% endfor %}

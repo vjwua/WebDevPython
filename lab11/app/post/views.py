@@ -32,8 +32,7 @@ def view_post_by_date():
 def view_detail(id):
     get_post = Post.query.get_or_404(id)
     category = (Category.query.get_or_404(get_post.category_id)).name
-    tag = Tag.query.get_or_404().all()
-    return render_template('detail_post.html', pk=get_post, category=category, tag=tag)
+    return render_template('detail_post.html', pk=get_post, category=category)
 
 @post_blueprint.route("/create", methods=['GET', 'POST'])
 @login_required
@@ -49,8 +48,16 @@ def create():
         else:
             image = 'postdefault.png'
 
-        new_post = Post(title=form.title.data, text=form.text.data, type=form.type.data, image_file=image, user_id=current_user.id)
+        category = Category.query.get_or_404(int(form.category.data))
+
+        new_post = Post(title=form.title.data, text=form.text.data, type=form.type.data, image_file=image, user_id=current_user.id, category=category)
         
+        selected_tags = form.tag.data
+        for tag_id in selected_tags:
+            tag = Tag.query.get(tag_id)
+            if tag:
+                new_post.tags.append(tag)
+
         db.session.add(new_post)
         db.session.commit()
         flash("Створення виконано", category=("success"))
@@ -78,7 +85,12 @@ def update(id):
         get_post.text = form.text.data
         get_post.type = form.type.data
         get_post.category_id = form.category.data
-        #get_post.tag_id = form.tag.data
+
+        selected_tags = form.tag.data
+        for tag_id in selected_tags:
+            tag = Tag.query.get(tag_id)
+            if tag:
+                get_post.tags.append(tag)
 
         db.session.commit()
         db.session.add(get_post)
@@ -90,7 +102,6 @@ def update(id):
     form.text.data = get_post.text
     form.type.data = get_post.type
     form.category.data = get_post.category_id
-    #form.tag.data = get_post.tag_id
 
     return render_template('update_post.html', form=form)
 

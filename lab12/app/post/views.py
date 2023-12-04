@@ -1,8 +1,7 @@
-from flask import flash, render_template, redirect, request, url_for
+from flask import flash, render_template, redirect, request, url_for, current_app
 from flask_login import login_required, current_user
 from sqlalchemy import desc
 
-from app import app
 from . import post_blueprint
 from .models import db, Post, Category, Tag
 from .forms import CreatePostForm, CreateCategoryForm, CreateTagForm
@@ -109,7 +108,7 @@ def save_picture(form_picture):
     random_hex = secrets.token_hex(8)
     _, f_ext = os.path.splitext(form_picture.filename)
     picture_fn = random_hex + f_ext
-    picture_path = os.path.join(app.root_path, 'post/static/post/images', picture_fn)
+    picture_path = os.path.join(current_app.root_path, 'post/static/post/images', picture_fn)
     form_picture.save(picture_path)
     return picture_fn
 

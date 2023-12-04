@@ -2,8 +2,6 @@ from flask import Flask
 from .extensions import db, migrate, bcrypt, login_manager
 from config import config
 
-app = Flask(__name__)
-
 def create_app(config_name = 'default'):
     app = Flask(__name__)
     app.config.from_object(config.get(config_name))

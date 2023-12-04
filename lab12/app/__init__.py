@@ -26,6 +26,9 @@ def create_app(config_name = 'default'):
         from .todo import todo_blueprint
         app.register_blueprint(todo_blueprint, url_prefix='/todo')
 
+        from .feedback import feedback_blueprint
+        app.register_blueprint(feedback_blueprint, url_prefix='/feedback')
+
         from .cookies import cookies_blueprint
         app.register_blueprint(cookies_blueprint, url_prefix='/cookies')
 

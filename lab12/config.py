@@ -19,9 +19,9 @@ class ProdConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "sqlite:///flaskdb.db")
 
 class TestConfig(Config):
-    DEVELOPMENT = True
+    TESTING = True
     DEBUG = True
-    WTF_CSRF_ENABLED = True
+    WTF_CSRF_ENABLED = False #!!
     SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL", "sqlite:///flask_testdb.db")
 
 config = {

@@ -1,5 +1,8 @@
 # WebDevPython
 Laboratory works from WebDev (3rd year)
+Number 12 (Unittest)
+![Screenshot](./lab12/screenshots/lab12_img_1.png)
+
 Number 11 (Posts, 1-M, M-M, Pagination)
 ![Screenshot](./lab11/screenshots/lab11_img_13.png)
 

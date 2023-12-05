@@ -27,7 +27,7 @@ class Post(db.Model):
     tags = db.relationship('Tag', secondary=post_tag, backref='posts')
 
     def __repr__(self):
-        return f"Post('{self.title}', '{self.created}', '{self.type}', '{self.user_id})"
+        return f"Post('{self.title}', '{self.created}', '{self.type}', '{self.user_id}')"
     
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)

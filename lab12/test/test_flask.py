@@ -351,7 +351,7 @@ class PostTestCase(BaseTestCase):
             all_post = Post.query.count()
             assert all_post == 2
 
-    """ def test_post_create(self):
+    def test_post_create(self):
         user = User(
             username="test_alt", 
             email="test_alt@gmail.com", 
@@ -382,14 +382,66 @@ class PostTestCase(BaseTestCase):
             response = self.client.post(
                 url_for('post_bp.create'),
                 data=dict(
-                    title="11", text="11", type=PostType.News, user_id=user.id, category=category
+                    title="11", text="11", type="News", user_id=user.id, category=category.id
                 ),
                 follow_redirects = True
             )
             self.assertEqual(response.status_code, 200)
             self.assertIn(u"Створення виконано", response.data.decode('utf8'))
+            post = Post.query.filter_by(title="11").first()
+            self.assertIsNotNone(post)
+
+    def test_post_update(self):
+        user = User(
+            username="test_alt", 
+            email="test_alt@gmail.com", 
+            password="123456"
+        )
+        category_1 = Category(
+            name = "Fun",
+        )
+        category_2 = Category(
+            name = "Unknown"
+        )
+        db.session.add(user)
+        db.session.add(category_1)
+        db.session.add(category_2)
+        db.session.commit()
+
+        post_1 = Post(
+            title="Minecraft", 
+            text="1940", 
+            type=PostType.News, 
+            user_id=user.id,
+            category=category_1
+        )
+        db.session.add(post_1)
+        db.session.commit()
+        
+        with self.client:
+            self.client.post(
+                url_for('auth_bp.login'),
+                data=dict(
+                    email = "test_alt@gmail.com",
+                    password = "123456",
+                    remember=True
+                ),
+                follow_redirects=True
+            )
+            
+            category_2 = Category.query.filter_by(name="Unknown").first()
+
+            response = self.client.post(
+                url_for('post_bp.update', id=post_1.id),
+                data=dict(
+                    title="Angry Birds", text="11", type="Other", enabled=None, user_id=user.id, category=category_2.id
+                ),
+                follow_redirects = True
+            )
+            self.assertEqual(response.status_code, 200)
+            self.assertIn(u"Пост був оновлений", response.data.decode('utf8'))
             post = Post.query.get(1)
-            assert post.title == "11" """
+            assert post.title == "Angry Birds"
 
     def test_post_page_view(self):
         user = User(

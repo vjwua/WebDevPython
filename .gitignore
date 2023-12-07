@@ -5,3 +5,4 @@
 */.vscode/settings.json
 */migrations/
 */test/__pycache__/
+*/py_tests/__pycache__/

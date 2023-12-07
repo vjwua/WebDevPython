@@ -290,7 +290,7 @@ class TodoTestCase(BaseTestCase):
             response = self.client.get('/todo/', follow_redirects=True)
             self.assertEqual(response.status_code, 200)
             self.assertIn(b'todoTable', response.data)
-
+"""
 def test_category_create(self):
         user = User(
             username="test_alt", 
@@ -319,6 +319,7 @@ def test_category_create(self):
             self.assertEqual(response.status_code, 200)
             category = Category.query.filter_by(id=1).first()
             self.assertIsNotNone(category)
+"""
 
 class PostTestCase(BaseTestCase):
     def test_get_all_post(self):

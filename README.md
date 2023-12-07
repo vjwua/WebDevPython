@@ -1,5 +1,16 @@
 # WebDevPython
 Laboratory works from WebDev (3rd year)
+Number 12 (REST, Jsonify)
+![Screenshot](./lab12/screenshots/lab13_img_2.png)
+
+![Screenshot](./lab12/screenshots/lab13_img_3.png)
+
+![Screenshot](./lab12/screenshots/lab13_img_4.png)
+
+![Screenshot](./lab12/screenshots/lab13_img_5.png)
+
+![Screenshot](./lab12/screenshots/lab13_img_6.png)
+
 Number 12 (Unittest)
 ![Screenshot](./lab12/screenshots/lab12_img_2.png)
 

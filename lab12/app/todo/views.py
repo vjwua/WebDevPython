@@ -43,7 +43,7 @@ def update_todo(todo_id=None):
     flash("Оновлення виконано", category=("success"))
     return redirect(url_for("todo_bp.todo"))
 
-@todo_blueprint.route("/delete_todo/<int:todo_id>")
+@todo_blueprint.route("/delete_todo/<int:todo_id>", methods=['POST'])
 def delete_todo(todo_id=None):
     todo = Todo.query.get_or_404(todo_id)
 

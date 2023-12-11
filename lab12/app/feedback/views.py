@@ -36,7 +36,7 @@ def create_feedback():
 @feedback_blueprint.route("/read_feedback/<int:feedback_id>")
 def read_feedback(feedback_id=None):
     feedback = Feedback.query.get_or_404(feedback_id)
-    return redirect(url_for("feedback"))
+    return redirect(url_for("feedback_bp.feedback"))
 
 @feedback_blueprint.route("/update_feedback/<int:feedback_id>")
 def update_feedback(feedback_id=None):
@@ -45,13 +45,13 @@ def update_feedback(feedback_id=None):
     feedback.useful = not feedback.useful
     db.session.commit()
     flash("Оновлення виконано", category=("success"))
-    return redirect(url_for("feedback"))
+    return redirect(url_for("feedback_bp.feedback"))
 
-@feedback_blueprint.route("/delete_feedback/<int:feedback_id>")
+@feedback_blueprint.route("/delete_feedback/<int:feedback_id>", methods=['POST'])
 def delete_feedback(feedback_id=None):
     feedback = Feedback.query.get_or_404(feedback_id)
 
     db.session.delete(feedback)
     db.session.commit()
     flash("Видалення виконано", category=("success"))
-    return redirect(url_for("feedback"))
+    return redirect(url_for("feedback_bp.feedback"))

@@ -11,7 +11,9 @@ Number 12 (REST, Jsonify)
 
 ![Screenshot](./lab13/screenshots/lab13_img_6.png)
 
-Number 12 (Unittest)
+Number 12 (Unittest, Pytest)
+![Screenshot](./lab12/screenshots/lab12_img_5.png)
+
 ![Screenshot](./lab12/screenshots/lab12_img_2.png)
 
 Number 11 (Posts, 1-M, M-M, Pagination)

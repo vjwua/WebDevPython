@@ -1,6 +1,15 @@
 # WebDevPython
 Laboratory works from WebDev (3rd year)
-Number 12 (REST, Jsonify)
+Number 14 (BasicAuth, JWT)
+![Screenshot](./lab14/screenshots/lab14_img_1.png)
+
+![Screenshot](./lab14/screenshots/lab14_img_2.png)
+
+![Screenshot](./lab14/screenshots/lab14_img_3.png)
+
+![Screenshot](./lab14/screenshots/lab14_img_4.png)
+
+Number 13 (REST, Jsonify)
 ![Screenshot](./lab13/screenshots/lab13_img_2.png)
 
 ![Screenshot](./lab13/screenshots/lab13_img_3.png)

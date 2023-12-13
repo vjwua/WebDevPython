@@ -1,5 +1,5 @@
 from flask import Flask
-from .extensions import db, migrate, bcrypt, login_manager
+from .extensions import db, migrate, bcrypt, jwt, login_manager
 from config import config
 
 def create_app(config_name = None):
@@ -19,6 +19,7 @@ def create_app(config_name = None):
     migrate.init_app(app, db, render_as_batch=True)
     login_manager.init_app(app)
     bcrypt.init_app(app)
+    jwt.init_app(app)
 
     login_manager.login_view = "auth_bp.login"
     login_manager.login_message = "Щоб побачити цю сторінку, необхідно авторизуватися!"

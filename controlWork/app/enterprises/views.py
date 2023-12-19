@@ -1,6 +1,6 @@
 from sqlalchemy.exc import IntegrityError
 from flask import jsonify, request, current_app
-from . import enterpises_blueprint
+from . import enterprises_blueprint
 from app import db, bcrypt, jwt
 from .models import Enterprise
 from app.auth.models import User
@@ -20,7 +20,7 @@ def verify_password(username, password):
 def unauthorized():
     return jsonify({"message":"Username or password incorrect!"}), 401
 
-@enterpises_blueprint.route('/login', methods=['POST'])
+@enterprises_blueprint.route('/login', methods=['POST'])
 @basicAuth.login_required
 def login():
     username = basicAuth.username()
@@ -39,21 +39,21 @@ def revoked_token_callback(jwt_header, jwt_payload):
         {"message": "The token has been revoked.",
          "error": "token_revoked"}), 401
 
-@enterpises_blueprint.route('/refresh', methods=["POST"])
+@enterprises_blueprint.route('/refresh', methods=["POST"])
 @jwt_required(refresh=True)
 def refresh():
     current_user = get_jwt_identity()
     new_token = create_access_token(identity=current_user, fresh=False)
     return jsonify({'token': new_token})
 
-@enterpises_blueprint.route("/logout", methods=["POST"])
+@enterprises_blueprint.route("/logout", methods=["POST"])
 @jwt_required()
 def logout():
     response = jsonify({"message": "logout successful"})
     unset_jwt_cookies(response)
     return response
 
-@enterpises_blueprint.route('/enterprises', methods=['GET'])
+@enterprises_blueprint.route('/enterprises', methods=['GET'])
 def get_all_enterprises():
     enterprises = Enterprise.query.all()
     return_values = [
@@ -66,7 +66,7 @@ def get_all_enterprises():
 
     return jsonify({'enterprises': return_values})
 
-@enterpises_blueprint.route('/enterprises', methods=['POST'])
+@enterprises_blueprint.route('/enterprises', methods=['POST'])
 @jwt_required()
 def post_enterprise():
     new_data = request.get_json()
@@ -95,7 +95,7 @@ def post_enterprise():
          "number_of_workers": new_enterprise.number_of_workers,
          "revenue": new_enterprise.revenue}), 201
 
-@enterpises_blueprint.route('/enterprises/<int:id>', methods=['PUT'])
+@enterprises_blueprint.route('/enterprises/<int:id>', methods=['PUT'])
 @jwt_required()
 def update_enterprise(id):
     enterprise = Enterprise.query.filter_by(id=id).first()
@@ -126,7 +126,7 @@ def update_enterprise(id):
     except IntegrityError:
         db.session.rollback()
 
-@enterpises_blueprint.route('/enterprises/<int:id>', methods=['GET'])
+@enterprises_blueprint.route('/enterprises/<int:id>', methods=['GET'])
 def get_enterprise(id):
     enterprise = Enterprise.query.get_or_404(id)
     return jsonify(
@@ -136,7 +136,7 @@ def get_enterprise(id):
          "number_of_workers": enterprise.number_of_workers,
          "revenue": enterprise.revenue})
 
-@enterpises_blueprint.route('/enterprises/<int:id>', methods=['DELETE'])
+@enterprises_blueprint.route('/enterprises/<int:id>', methods=['DELETE'])
 @jwt_required()
 def delete_enterprise(id):
       enterprise = Enterprise.query.get(id)

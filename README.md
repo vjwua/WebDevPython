@@ -1,5 +1,16 @@
 # WebDevPython
 Laboratory works from WebDev (3rd year)
+Control Work
+![Screenshot](./controlWork/screenshots/cw_img_1.png)
+
+![Screenshot](./controlWork/screenshots/cw_img_2.png)
+
+![Screenshot](./controlWork/screenshots/cw_img_3.png)
+
+![Screenshot](./controlWork/screenshots/cw_img_4.png)
+
+![Screenshot](./controlWork/screenshots/cw_img_6.png)
+
 Number 14 (BasicAuth, JWT)
 ![Screenshot](./lab14/screenshots/lab14_img_1.png)
 

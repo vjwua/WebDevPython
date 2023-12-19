@@ -50,4 +50,7 @@ def create_app(config_name = None):
         from .api import api_blueprint
         app.register_blueprint(api_blueprint, url_prefix='/api')
 
+        from .enterprises import enterprises_blueprint
+        app.register_blueprint(enterprises_blueprint, url_prefix='/enterprises')
+
         return app

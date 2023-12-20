@@ -53,4 +53,7 @@ def create_app(config_name = None):
         from .accounts_api import accounts_api_blueprint
         app.register_blueprint(accounts_api_blueprint, url_prefix='/accounts_api')
 
+        from .swagger import swaggerui_blueprint
+        app.register_blueprint(swaggerui_blueprint, url_prefix='/swagger')
+
         return app
